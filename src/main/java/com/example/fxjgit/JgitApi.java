@@ -1,4 +1,4 @@
-package org.example;
+package com.example.fxjgit;
 
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -8,21 +8,7 @@ import java.io.IOException;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
-public class Main {
-
-
-    public static void main(String[] args) throws GitAPIException {
-        // Press Alt+Enter with your caret at the highlighted text to see how
-        // IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
-
-       Git git = openRepository("./hehe");
-       Status status = checkStatus(git);
-
-        System.out.println(getStatusString(status));
-    }
-
-
+public class JgitApi {
 
     public static Git initializeRepository(String path) {
         Git git = null;
@@ -43,7 +29,7 @@ public class Main {
             git = Git.open(new File(path));
             System.out.println(git.toString());
         }
-         catch (IOException e) {
+        catch (IOException e) {
             System.out.println(e.getStackTrace());
         }
 

@@ -1,0 +1,140 @@
+/* Применение стилей к BorderPane */
+BorderPane {
+    -fx-background-color: #FFFFFF;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+#mainHbox {
+    -fx-padding: 20 40 20 40;
+}
+
+#getStartedLabel {
+    -fx-font-size: 36px;
+    -fx-text-fill: #2F363D;
+    -fx-alignment: center;
+}
+/* Применение стилей к Button */
+Button {
+    -fx-font-size: 14px;
+    -fx-padding: 10px;
+    -fx-background-color: #F6F8FA;
+    -fx-text-fill: #666666;
+    -fx-border-color: #999087;
+    -fx-border-radius: 7px;
+}
+
+Button:hover {
+
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #999999
+}
+
+#buttonContainer {
+    -fx-alignment: TOP-CENTER;
+}
+/* Применение стилей к TextField */
+TextField {
+    -fx-padding: 5px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #999087;
+    -fx-border-radius: 7px;
+}
+
+/* таблица репозиториев */
+.list-view {
+    -fx-background-color: #f6f8fa;
+}
+
+.list-cell {
+    -fx-background-color: #ffffff;
+    -fx-padding: 10px;
+    -fx-background-radius: 5px;
+    -fx-border-width: 0px;
+}
+
+.list-cell:hover {
+    -fx-background-color: #f6f8fa;
+}
+
+.list-cell:selected {
+    -fx-background-color: #0366d6;
+    -fx-text-fill: #ffffff;
+}
+
+.list-view .scroll-bar {
+    -fx-background-color: #f6f8fa;
+}
+
+.list-view .scroll-bar:horizontal {
+    -fx-pref-height: 8px;
+}
+
+.list-view .scroll-bar:vertical {
+    -fx-pref-width: 8px;
+}
+
+.list-view .scroll-bar .track {
+    -fx-background-color: transparent;
+}
+
+.list-view .scroll-bar .thumb {
+    -fx-background-color: #bdc7d2;
+    -fx-background-radius: 4px;
+}
+
+.list-view .scroll-bar .thumb:hover {
+    -fx-background-color: #95a2b0;
+}
+
+.list-view .scroll-bar .thumb:pressed {
+    -fx-background-color: #778899;
+}
+
+.list-view .scroll-bar .thumb:hover:pressed {
+    -fx-background-color: #657583;
+}
+/* Стили для меню */
+#menuHbox {
+    -fx-background-color:#24292e;
+}
+MenuBar{
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #24292e;
+    -fx-spacing: 0;
+}
+
+.menu-bar .label{
+    -fx-text-fill: #ffffff;
+}
+
+.menu-bar .label:hover{
+    -fx-background-color: #2F363D;
+}
+
+.menu:hover {
+    -fx-background-color: #2F363D;
+
+}
+
+.menu-item .label{
+    -fx-text-fill: #666666
+}
+
+
+.menu-item:hover .label{
+    -fx-background-color: #2F363D;
+    -fx-text-fill: #ffffff;
+}
+
+.menu-item:hover {
+    -fx-background-color: #2F363D;
+    -fx-text-fill: #ffffff;
+}
+
+.menu-item:focused {
+    -fx-background-color: #2F363D;
+}
+
+.menu-item:focused .label{
+    -fx-text-fill: #ffffff;
+}

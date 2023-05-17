@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane prefHeight="720" prefWidth="1080" stylesheets="@github-like-style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fxjgit.StartWindowController">
+    <top>
+        <HBox fx:id="menuHbox">
+            <fx:include source="ToolsMenu.fxml" prefWidth="Infinity"/>
+        </HBox>
+    </top>
+    <center>
+        <VBox alignment="CENTER">
+            <Label fx:id="getStartedLabel" text="Let's get started!" textAlignment="CENTER"/>
+            <HBox fx:id="mainHbox" spacing="15" alignment="CENTER" maxWidth="Infinity">
+                <VBox fx:id="buttonContainer" alignment="CENTER" spacing="10" maxWidth="Infinity"  HBox.hgrow="ALWAYS">
+                    <Button maxWidth="Infinity" text="Create a new repository" HBox.hgrow="ALWAYS" />
+                    <Button maxWidth="Infinity" text="Clone repository" HBox.hgrow="ALWAYS" />
+                    <Button maxWidth="Infinity" text="Add existing repository" HBox.hgrow="ALWAYS" />
+                </VBox>
+                <VBox  HBox.hgrow="ALWAYS" alignment="TOP_LEFT" spacing="15">
+                    <HBox alignment="BASELINE_LEFT" spacing="10">
+                        <TextField promptText="Filter your repositories" HBox.hgrow="ALWAYS"/>
+                        <Button text="🗘" minWidth="60" maxHeight="15"/>
+                    </HBox>
+                    <VBox spacing="7">
+                        <Label text="History" textAlignment="CENTER"/>
+                        <ListView>
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Repo 1" />
+                                    <String fx:value="Repo 2" />
+                                    <String fx:value="Repo 3" />
+                                    <String fx:value="Repo 4" />
+                                    <String fx:value="Repo 5" />
+                                    <String fx:value="Repo 1" />
+                                    <String fx:value="Repo 1" />
+                                    <String fx:value="Repo 1" />
+                                    <String fx:value="Repo 1" />
+                                    <String fx:value="Repo 1" />
+                                    <String fx:value="Repo 1" />
+                                    <String fx:value="Repo 1" />
+
+                                </FXCollections>
+                            </items>
+                        </ListView>
+                    </VBox>
+                </VBox>
+            </HBox>
+        </VBox>
+
+    </center>
+
+</BorderPane>

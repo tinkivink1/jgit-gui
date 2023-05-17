@@ -1,0 +1,85 @@
+.root {
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-font-size: 12px;
+}
+
+.menu-bar {
+    -fx-background-color: #24292e;
+}
+
+.menu-bar .menu {
+    -fx-text-fill: white;
+}
+
+.menu-bar .menu .menu-item {
+    -fx-text-fill: white;
+}
+
+.split-pane {
+    -fx-divider-position: 0.3;
+}
+
+.split-pane .split-pane-divider {
+    -fx-background-color: #e1e4e8;
+    -fx-background-insets: 0;
+    -fx-padding: 0.25;
+}
+
+.split-pane .split-pane-divider:vertical {
+    -fx-background-color: #e1e4e8;
+}
+
+.text-field {
+    -fx-background-color: white;
+}
+
+.button {
+    -fx-background-color: #6cc644;
+    -fx-text-fill: white;
+}
+
+.button:hover {
+    -fx-background-color: #5cb539;
+}
+
+.list-view {
+    -fx-background-color: white;
+}
+
+.tab-pane {
+    -fx-tab-min-height: 32px;
+    -fx-tab-max-height: 32px;
+    -fx-tab-min-width: 120px;
+    -fx-tab-max-width: 120px;
+}
+
+.tab-pane .tab {
+    -fx-background-color: #f6f8fa;
+    -fx-text-fill: #586069;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: white;
+    -fx-text-fill: #0366d6;
+}
+
+.tab-pane .tab .tab-label {
+    -fx-alignment: CENTER_LEFT;
+}
+
+.tab-pane .tab .tab-close-button {
+    -fx-graphic: null;
+    -fx-background-color: transparent;
+}
+
+.tab-pane .tab .tab-close-button:hover {
+    -fx-background-color: #f6f8fa;
+}
+
+.hbox .button:last-child {
+    -fx-margin-right: 10px;
+}
+
+.bottom {
+    -fx-background-color: #f6f8fa;
+}
