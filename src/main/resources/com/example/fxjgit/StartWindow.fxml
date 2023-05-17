@@ -16,15 +16,17 @@
         <VBox alignment="CENTER">
             <Label fx:id="getStartedLabel" text="Let's get started!" textAlignment="CENTER"/>
             <HBox fx:id="mainHbox" spacing="15" alignment="CENTER" maxWidth="Infinity">
-                <VBox fx:id="buttonContainer" alignment="CENTER" spacing="10" maxWidth="Infinity"  HBox.hgrow="ALWAYS">
+                <VBox fx:id="buttonContainer"  spacing="10" maxWidth="Infinity" HBox.hgrow="ALWAYS">
                     <Button maxWidth="Infinity" text="Create a new repository" HBox.hgrow="ALWAYS" />
                     <Button maxWidth="Infinity" text="Clone repository" HBox.hgrow="ALWAYS" />
                     <Button maxWidth="Infinity" text="Add existing repository" HBox.hgrow="ALWAYS" />
+                    <Region VBox.vgrow="ALWAYS" />
+                    <Button maxWidth="Infinity" text="Добавил для красотыыыыыы" HBox.hgrow="ALWAYS" />
                 </VBox>
                 <VBox  HBox.hgrow="ALWAYS" alignment="TOP_LEFT" spacing="15">
-                    <HBox alignment="BASELINE_LEFT" spacing="10">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
                         <TextField promptText="Filter your repositories" HBox.hgrow="ALWAYS"/>
-                        <Button text="🗘" minWidth="60" maxHeight="15"/>
+                        <Button text="⟳" fx:id="reloadButton"/>
                     </HBox>
                     <VBox spacing="7">
                         <Label text="History" textAlignment="CENTER"/>
