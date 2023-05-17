@@ -14,7 +14,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.layout.Pane?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/16" fx:controller="com.example.fxjgit.HelloController" stylesheets="@github-like-style.css">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/16" fx:controller="com.example.fxjgit.HelloController" stylesheets="@../styles/github-like-style.css">
     <top>
         <HBox fx:id="menuHbox">
             <fx:include source="ToolsMenu.fxml" />

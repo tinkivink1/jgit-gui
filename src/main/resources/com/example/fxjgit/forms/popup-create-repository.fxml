@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER_LEFT" spacing="10" styleClass="popup-container" fx:controller="com.example.fxjgit.CreateRepositoryController" stylesheets="@../styles/popup-create-style.css">
+    <Label text="Create a new repository" styleClass="popup-title" />
+    <VBox spacing="6">
+        <Label text="Name" styleClass="popup-label" />
+        <TextField promptText="Repository name" styleClass="popup-textfield" fx:id="nameTextField" onTextChange="#validateInput"/>
+    </VBox>
+
+    <VBox spacing="6">
+        <Label text="Description" styleClass="popup-label" />
+        <TextField promptText="Repository description" styleClass="popup-textfield" fx:id="descriptionTextField" onTextChange="#validateInput"/>
+    </VBox>
+
+    <VBox spacing="6">
+        <Label text="Local path" styleClass="popup-label" />
+        <HBox spacing="10">
+            <TextField promptText="Selected Location" fx:id="selectedLocationTextField" editable="false" styleClass="popup-textfield" HBox.hgrow="ALWAYS" onTextChange="#validateInput"/>
+            <Button text="Select Location" onAction="#onSelectLocationButtonClicked" styleClass="popup-button" />
+        </HBox>
+    </VBox>
+
+
+    <Button text="Create" styleClass="popup-button" onAction="#createNewRepository" minWidth="100" fx:id="createButton"/>
+</VBox>

@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane prefHeight="720" prefWidth="1080" stylesheets="@github-like-style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fxjgit.StartWindowController">
+<BorderPane prefHeight="720" prefWidth="1080" stylesheets="@../styles/github-like-style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fxjgit.StartWindowController">
     <top>
         <HBox fx:id="menuHbox">
             <fx:include source="ToolsMenu.fxml" prefWidth="Infinity"/>
@@ -17,9 +17,10 @@
             <Label fx:id="getStartedLabel" text="Let's get started!" textAlignment="CENTER"/>
             <HBox fx:id="mainHbox" spacing="15" alignment="CENTER" maxWidth="Infinity">
                 <VBox fx:id="buttonContainer"  spacing="10" maxWidth="Infinity" HBox.hgrow="ALWAYS">
-                    <Button maxWidth="Infinity" text="Create a new repository" HBox.hgrow="ALWAYS" />
-                    <Button maxWidth="Infinity" text="Clone repository" HBox.hgrow="ALWAYS" />
-                    <Button maxWidth="Infinity" text="Add existing repository" HBox.hgrow="ALWAYS" />
+                    <Button fx:id="createButton" onMouseClicked="#onCreateButtonClicked" maxWidth="Infinity"
+                            text="Create a new repository" HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="cloneButton" maxWidth="Infinity" text="Clone repository" HBox.hgrow="ALWAYS" />
+                    <Button fx:id="addExistingButton" maxWidth="Infinity" text="Add existing repository" HBox.hgrow="ALWAYS" />
                     <Region VBox.vgrow="ALWAYS" />
                     <Button maxWidth="Infinity" text="Добавил для красотыыыыыы" HBox.hgrow="ALWAYS" />
                 </VBox>
@@ -45,7 +46,6 @@
                                     <String fx:value="Repo 1" />
                                     <String fx:value="Repo 1" />
                                     <String fx:value="Repo 1" />
-
                                 </FXCollections>
                             </items>
                         </ListView>

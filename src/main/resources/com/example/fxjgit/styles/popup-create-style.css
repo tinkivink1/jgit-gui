@@ -1,0 +1,38 @@
+.popup-container {
+    -fx-background-color: #f6f8fa;
+    -fx-padding: 20;
+}
+
+.popup-title {
+    -fx-font-size: 24px;
+    -fx-text-fill: #2F363D;
+    -fx-alignment: center;
+}
+
+.popup-textfield {
+    -fx-padding: 5px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #999087;
+    -fx-border-radius: 7px;
+    -fx-border-width: 0.5px;
+}
+
+
+.popup-button {
+    -fx-font-size: 12px;
+    -fx-background-color: #0096C9;
+    -fx-text-fill: #FFFFFF;
+    -fx-border-color: #999087;
+    -fx-background-radius: 7px;
+    -fx-border-radius: 7px;
+    -fx-border-width: 0.5px;
+    -fx-max-height: 12px;
+}
+
+.popup-button:hover {
+    -fx-background-color: #11a7ea;
+}
+
+.popup-button:pressed {
+    -fx-background-color: #0085b7;
+}
