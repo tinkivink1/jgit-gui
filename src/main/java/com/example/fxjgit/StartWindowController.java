@@ -26,7 +26,7 @@ public class StartWindowController {
         // Загружаем разметку из FXML-файла
         Parent root = null;
         try {
-            root = FXMLLoader.load(getClass().getResource("popup-create-repository.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/com/example/fxjgit/forms/popup-create-repository.fxml"));
         } catch (IOException e) {
             System.out.println(e.getStackTrace());
         }
@@ -41,12 +41,25 @@ public class StartWindowController {
         popupStage.setScene(scene);
         popupStage.setTitle("Create Repository");
 
+        Button initializeButton = (Button) root.lookup("#createButton"); // Замените "initializeButton" на соответствующий ID кнопки в FXML
+        initializeButton.setOnAction(e -> {
+            handleRepositoryInitialization();
+        });
 
+        popupStage.setOnCloseRequest(e -> {
+            // Обработка закрытия окна
+            // Ваш код здесь
+        });
 
         // Отображаем окно по центру
         popupStage.centerOnScreen();
 
         // Показываем окно
         popupStage.show();
+    }
+
+
+    private void handleRepositoryInitialization(){
+
     }
 }
