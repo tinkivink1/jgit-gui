@@ -11,10 +11,9 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.layout.Pane?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/16" fx:controller="com.example.fxjgit.HelloController" stylesheets="@../styles/github-like-style.css">
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.Region?>
+<BorderPane prefHeight="720" prefWidth="1080" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/16" fx:controller="com.example.fxjgit.HelloController" stylesheets="@../styles/github-like-style.css">
     <top>
         <HBox fx:id="menuHbox">
             <fx:include source="ToolsMenu.fxml" />
@@ -24,14 +23,22 @@
         <SplitPane dividerPositions="0.3">
             <TabPane>
                 <Tab text="Changes">
-                    <ListView VBox.vgrow="ALWAYS">
-                        <!-- Здесь могут быть элементы списка -->
-                    </ListView>
+                    <ScrollPane fitToHeight="true" fitToWidth="true">
+                        <VBox>
+                            <ListView VBox.vgrow="ALWAYS">
+                                <!-- Здесь могут быть элементы списка -->
+                            </ListView>
+                        </VBox>
+                    </ScrollPane>
                 </Tab>
                 <Tab text="History">
-                    <ListView VBox.vgrow="ALWAYS">
-                        <!-- Здесь могут быть элементы списка -->
-                    </ListView>
+                    <ScrollPane fitToHeight="true" fitToWidth="true">
+                        <VBox>
+                            <ListView VBox.vgrow="ALWAYS">
+                                <!-- Здесь могут быть элементы списка -->
+                            </ListView>
+                        </VBox>
+                    </ScrollPane>
                 </Tab>
             </TabPane>
             <VBox>
@@ -39,21 +46,23 @@
                     <TextField promptText="Filter" />
                     <Button text="New Branch" />
                 </HBox>
-                <ListView VBox.vgrow="ALWAYS">
-                    <!-- Здесь могут быть элементы списка -->
-                </ListView>
+                <ScrollPane fitToHeight="true" fitToWidth="true">
+                    <VBox>
+                        <ListView VBox.vgrow="ALWAYS">
+                            <!-- Здесь могут быть элементы списка -->
+                        </ListView>
+                    </VBox>
+                </ScrollPane>
             </VBox>
         </SplitPane>
     </center>
     <bottom>
-<!--        <HBox spacing="5">-->
-<!--            <Button text="Commit" />-->
-<!--            <Button text="Pull" />-->
-<!--            <Button text="Push" />-->
-<!--            <HBox.hgrow>-->
-<!--&lt;!&ndash;                <Pane></Pane>&ndash;&gt;-->
-<!--            </HBox.hgrow>-->
-<!--            <Button text="Settings" />-->
-<!--        </HBox>-->
+        <HBox spacing="5">
+            <Button text="Commit" />
+            <Button text="Pull" />
+            <Button text="Push" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="Settings" />
+        </HBox>
     </bottom>
 </BorderPane>

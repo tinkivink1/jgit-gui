@@ -4,6 +4,10 @@ BorderPane {
     -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
 }
 
+#menuHbox {
+    -fx-background-color:#24292e;
+}
+
 #mainHbox {
     -fx-padding: 20 40 20 40;
 }
@@ -103,51 +107,7 @@ TextField {
 }
 
 
-/* Стили для меню */
-#menuHbox {
-    -fx-background-color:#24292e;
-}
-MenuBar{
-    -fx-text-fill: #ffffff;
-    -fx-background-color: #24292e;
-    -fx-spacing: 0;
-}
 
-.menu-bar .label{
-    -fx-text-fill: #ffffff;
-}
-
-.menu-bar .label:hover{
-    -fx-background-color: #2F363D;
-}
-
-.menu:hover {
-    -fx-background-color: #2F363D;
-
-}
-
-.menu-item .label{
-    -fx-text-fill: #666666
-}
-
-
-.menu-item:hover .label{
-    -fx-background-color: #2F363D;
-    -fx-text-fill: #ffffff;
-}
-
-.menu-item:hover {
-    -fx-background-color: #2F363D;
-    -fx-text-fill: #ffffff;
-}
-
-.menu-item:focused {
-    -fx-background-color: #2F363D;
-}
-
-.menu-item:focused .label{
-    -fx-text-fill: #ffffff;
-}
 
 
 /* стили TabPane*/
@@ -170,7 +130,6 @@ MenuBar{
     -fx-border-color: transparent;
     -fx-effect: none;
 }
-
 
 .tab-pane .tab:selected {
     -fx-background-color: #ffffff;

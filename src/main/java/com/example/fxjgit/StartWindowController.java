@@ -47,8 +47,7 @@ public class StartWindowController {
         });
 
         popupStage.setOnCloseRequest(e -> {
-            // Обработка закрытия окна
-            // Ваш код здесь
+            handleRepositoryInitialization();
         });
 
         // Отображаем окно по центру

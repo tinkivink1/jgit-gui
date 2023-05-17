@@ -1,0 +1,43 @@
+/* Стили для меню */
+
+MenuBar{
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #24292e;
+    -fx-spacing: 0;
+}
+
+.menu-bar .label{
+    -fx-text-fill: #ffffff;
+}
+
+.menu-bar .label:hover{
+    -fx-background-color: #2F363D;
+}
+
+.menu:hover {
+    -fx-background-color: #2F363D;
+
+}
+
+.menu-item .label{
+    -fx-text-fill: #666666
+}
+
+
+.menu-item:hover .label{
+    -fx-background-color: #2F363D;
+    -fx-text-fill: #ffffff;
+}
+
+.menu-item:hover {
+    -fx-background-color: #2F363D;
+    -fx-text-fill: #ffffff;
+}
+
+.menu-item:focused {
+    -fx-background-color: #2F363D;
+}
+
+.menu-item:focused .label{
+    -fx-text-fill: #ffffff;
+}
