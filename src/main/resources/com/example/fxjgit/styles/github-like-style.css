@@ -106,9 +106,73 @@ TextField {
     -fx-background-color: #657583;
 }
 
+/* file list view */
+#fileListView .list-cell {
+    -fx-control-inner-background: transparent;
+    -fx-text-fill: black;
+    -fx-padding: 2 4;
+    -fx-background-radius: 0px;
+}
+
+#fileListView .list-cell.deleted {
+    -fx-background-color: rgba(255, 0, 0, 0.1);
+    -fx-control-inner-background: rgba(255, 0, 0, 0.2);
+    -fx-text-fill: red;
+}
+
+#fileListView .list-cell.added {
+    -fx-background-color: rgba(0, 255, 0, 0.1);
+    -fx-control-inner-background: rgba(0, 255, 0, 0.2);
+    -fx-text-fill: green;
+}
 
 
+/*Split pane */
+.split-pane-divider {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-background-insets: 0;
+}
 
+.split-pane-divider .split-pane-divider-line {
+    -fx-background-color: #d1d5da;
+    -fx-background-radius: 0;
+}
+
+.split-pane-divider:hover .split-pane-divider-line {
+    -fx-background-color: #0366d6;
+}
+
+.split-pane .split-pane-divider {
+    -fx-padding: 0.25 0.25 0.25 0.25;
+}
+
+.split-pane .split-pane-divider:horizontal {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-cursor: col-resize;
+}
+
+.split-pane .split-pane-divider:vertical {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-cursor: row-resize;
+}
+
+.split-pane .split-pane-divider:horizontal:hover,
+.split-pane .split-pane-divider:vertical:hover {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
 
 /* стили TabPane*/
 .tab-pane {

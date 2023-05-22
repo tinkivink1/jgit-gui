@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -11,8 +12,6 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.Region?>
 <BorderPane prefHeight="720" prefWidth="1080" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/16" fx:controller="com.example.fxjgit.HelloController" stylesheets="@../styles/github-like-style.css">
     <top>
         <HBox fx:id="menuHbox">
@@ -25,7 +24,7 @@
                 <Tab text="Changes">
                     <ScrollPane fitToHeight="true" fitToWidth="true">
                         <VBox>
-                            <ListView VBox.vgrow="ALWAYS">
+                            <ListView VBox.vgrow="ALWAYS" fx:id="changesListView">
                                 <!-- Здесь могут быть элементы списка -->
                             </ListView>
                         </VBox>
@@ -34,35 +33,31 @@
                 <Tab text="History">
                     <ScrollPane fitToHeight="true" fitToWidth="true">
                         <VBox>
-                            <ListView VBox.vgrow="ALWAYS">
+                            <ListView VBox.vgrow="ALWAYS" fx:id="historyListView">
                                 <!-- Здесь могут быть элементы списка -->
                             </ListView>
                         </VBox>
                     </ScrollPane>
                 </Tab>
             </TabPane>
-            <VBox>
-                <HBox spacing="5">
-                    <TextField promptText="Filter" />
-                    <Button text="New Branch" />
-                </HBox>
-                <ScrollPane fitToHeight="true" fitToWidth="true">
-                    <VBox>
-                        <ListView VBox.vgrow="ALWAYS">
-                            <!-- Здесь могут быть элементы списка -->
-                        </ListView>
-                    </VBox>
-                </ScrollPane>
-            </VBox>
+            <SplitPane dividerPositions="0" fx:id="contentSplitPane" style="-fx-padding:0">
+                <VBox VBox.vgrow="ALWAYS">
+                    <ListView fx:id="commitChangesListView" VBox.vgrow="ALWAYS"/>
+                </VBox>
+                <VBox fx:id="linesContainer">
+<!--                    <HBox spacing="5">-->
+<!--                        <TextField promptText="Filter" />-->
+<!--                        <Button text="New Branch" style="-fx-padding: 3"/>-->
+<!--                    </HBox>-->
+                    <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
+                        <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                            <ListView VBox.vgrow="ALWAYS" fx:id="fileListView" >
+
+                            </ListView>
+                        </VBox>
+                    </ScrollPane>
+                </VBox>
+            </SplitPane>
         </SplitPane>
     </center>
-    <bottom>
-        <HBox spacing="5">
-            <Button text="Commit" />
-            <Button text="Pull" />
-            <Button text="Push" />
-            <Region HBox.hgrow="ALWAYS" />
-            <Button text="Settings" />
-        </HBox>
-    </bottom>
 </BorderPane>

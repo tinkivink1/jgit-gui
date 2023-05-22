@@ -1,11 +1,21 @@
 package com.example.fxjgit;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.diff.Edit;
+import org.eclipse.jgit.diff.RawText;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
@@ -71,6 +81,66 @@ public class JgitApi {
         }
 
         return status;
+    }
+
+    private ObservableList<String> loadChangesToListView(Git git, ObjectId oldCommit, ObjectId newCommit, String fileName) throws IOException, GitAPIException {
+        CanonicalTreeParser newTreeParser = new CanonicalTreeParser();
+        try (var reader = git.getRepository().newObjectReader()) {
+            var head = newCommit;
+            newTreeParser.reset(reader, head);
+        }
+
+        // Get the previous commit
+        Iterable<RevCommit> commits = git.log().setMaxCount(1).call();
+        RevCommit commit = commits.iterator().next();
+
+        // Get the previous file tree
+        CanonicalTreeParser oldTreeParser = new CanonicalTreeParser();
+        try (var reader = git.getRepository().newObjectReader()) {
+            var oldHead = oldCommit;
+            oldTreeParser.reset(reader, oldHead);
+        }
+
+        // Perform diff between the two file trees
+        List<DiffEntry> diffs = git.diff()
+                .setNewTree(newTreeParser)
+                .setOldTree(oldTreeParser)
+                .call();
+
+        // Create an ObservableList to store the changes
+        ObservableList<String> changes = FXCollections.observableArrayList();
+
+        // Generate diff for the specified file
+        for (DiffEntry diff : diffs) {
+            if (diff.getNewPath().equals(fileName)) {
+                // Create a formatter for generating the diff text
+                try (var reader = git.getRepository().newObjectReader()) {
+                    var oldObjectId = diff.getOldId().toObjectId();
+                    var newObjectId = diff.getNewId().toObjectId();
+                    var oldText = new RawText(reader.open(oldObjectId).getBytes());
+                    var newText = new RawText(reader.open(newObjectId).getBytes());
+                    var diffFormatter = new DiffFormatter(System.out);
+                    var edits = diffFormatter.toFileHeader(diff).toEditList();
+
+                    // Generate the diff text for the specified file
+                    StringBuilder diffTextBuilder = new StringBuilder();
+                    for (Edit edit : edits) {
+                        for (int i = edit.getBeginA(); i < edit.getEndA(); i++) {
+                            diffTextBuilder.append(oldText.getString(i)).append("\n");
+                        }
+                        for (int i = edit.getBeginB(); i < edit.getEndB(); i++) {
+                            diffTextBuilder.append(newText.getString(i)).append("\n");
+                        }
+                    }
+
+                    // Add the diff text to the changes list
+                    changes.add(diffTextBuilder.toString());
+                }
+            }
+        }
+
+        // Set the changes list to the ListView
+        return changes;
     }
 
     public static String getStatusString(Status status){
