@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER_LEFT" spacing="10" styleClass="popup-container" fx:controller="com.example.fxjgit.CreateRepositoryController" stylesheets="@../styles/popup-create-style.css">
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER_LEFT" spacing="10" styleClass="popup-container" fx:controller="com.example.fxjgit.CreateRepositoryController" stylesheets="@../../styles/popup-create-style.css">
     <Label text="Create a new repository" styleClass="popup-title" />
     <VBox spacing="6">
         <Label text="Name" styleClass="popup-label" />
@@ -21,11 +21,11 @@
     <VBox spacing="6">
         <Label text="Local path" styleClass="popup-label" />
         <HBox spacing="10">
-            <TextField promptText="Selected Location" fx:id="selectedLocationTextField" editable="false" styleClass="popup-textfield" HBox.hgrow="ALWAYS" onTextChange="#validateInput"/>
+            <TextField promptText="Selected Location" fx:id="selectedLocationTextField" editable="false" styleClass="popup-textfield" HBox.hgrow="ALWAYS"/>
             <Button text="Select Location" onAction="#onSelectLocationButtonClicked" styleClass="popup-button" />
         </HBox>
     </VBox>
 
 
-    <Button text="Create" styleClass="popup-button" onAction="#createNewRepository" minWidth="100" fx:id="createButton"/>
+    <Button text="Create" styleClass="popup-button" minWidth="100" fx:id="createButton"/>
 </VBox>

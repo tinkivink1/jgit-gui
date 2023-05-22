@@ -8,19 +8,17 @@ import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.internal.storage.file.FileRepository;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class OpenRepositoryController implements Initializable, IPopup{
+public class ExistingRepositoryController implements Initializable, IPopup{
     @FXML
     private TextField pathTextField;
 
     @FXML
-    private Button openButton;
+    public Button openButton;
 
     private String title = "Open existing repository";
 
@@ -48,16 +46,9 @@ public class OpenRepositoryController implements Initializable, IPopup{
     public Git openRepository() {
         String repositoryPath = pathTextField.getText();
 
-        try {
-            FileRepository fileRepository = new FileRepository(repositoryPath);
-            git = new Git(fileRepository);
-            // Здесь можно выполнить необходимые операции с открытым репозиторием
-            return git;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+        this.git = JgitApi.openRepository(repositoryPath);
+        // Здесь можно выполнить необходимые операции с открытым репозиторием
+        return this.git;
     }
 
     @FXML
@@ -73,8 +64,8 @@ public class OpenRepositoryController implements Initializable, IPopup{
 
 
     @Override
-    public Git returnValueOnClose() {
-        return git;
+    public Git finalAction() {
+        return openRepository();
     }
 
     @FXML

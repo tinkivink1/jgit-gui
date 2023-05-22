@@ -74,8 +74,10 @@ public class CreateRepositoryController implements Initializable, IPopup {
     }
 
 
-    public void createNewRepository(ActionEvent actionEvent) {
-        git = JgitApi.initializeRepository(selectedLocationTextField.getText());
+    public Git createNewRepository() {
+        this.git = JgitApi.initializeRepository(selectedLocationTextField.getText());
+
+        return this.git;
     }
 
     @FXML
@@ -91,7 +93,7 @@ public class CreateRepositoryController implements Initializable, IPopup {
     }
 
     @Override
-    public Git returnValueOnClose() {
-        return git;
+    public Git finalAction() {
+        return createNewRepository();
     }
 }

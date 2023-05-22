@@ -23,7 +23,7 @@ public class CloneRepositoryController implements Initializable, IPopup {
     private TextField selectedLocationTextField;
 
     @FXML
-    private Button cloneButton;
+    public Button cloneButton;
 
     @FXML
     private String title = "Clone repository";
@@ -65,20 +65,14 @@ public class CloneRepositoryController implements Initializable, IPopup {
     }
 
     @FXML
-    private void cloneRepository(ActionEvent event) {
+    private Git cloneRepository() {
         // Обработчик нажатия кнопки "Clone"
         String repositoryURL = urlTextField.getText();
         String localPath = selectedLocationTextField.getText();
 
-        try {
-            git = Git.cloneRepository()
-                    .setURI(repositoryURL)
-                    .setDirectory(new File(localPath))
-                    .call();
-            System.out.println("Repository cloned successfully!");
-        } catch (GitAPIException e) {
-            e.printStackTrace();
-        }
+       this.git = JgitApi.cloneRepository(repositoryURL, localPath);
+
+       return this.git;
     }
 
     @FXML
@@ -93,8 +87,8 @@ public class CloneRepositoryController implements Initializable, IPopup {
     }
 
     @Override
-    public Git returnValueOnClose() {
-        return git;
+    public Git finalAction() {
+        return cloneRepository();
     }
 
     @Override

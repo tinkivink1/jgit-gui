@@ -1,5 +1,6 @@
 package com.example.fxjgit;
 
+import javafx.event.ActionEvent;
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
@@ -36,6 +37,19 @@ public class JgitApi {
         return git;
     }
 
+    public static Git cloneRepository(String url, String path) {
+        Git git = null;
+        try {
+            git = Git.cloneRepository()
+                    .setURI(url)
+                    .setDirectory(new File(path))
+                    .call();
+            System.out.println("Repository cloned successfully!");
+        } catch (GitAPIException e) {
+            e.printStackTrace();
+        }
+        return git;
+    }
     public static void addFile(Git git, String filePattern){
         AddCommand addCommand  = git.add();
         addCommand.addFilepattern("filePattern");

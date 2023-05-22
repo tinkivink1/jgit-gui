@@ -24,11 +24,12 @@ public class StartWindowController {
     @FXML
     public Button addExistingButton;
 
+    private IPopup popupEndsListener;
 
     public void onCreateButtonClicked(MouseEvent event) {
         AtomicReference<Git> resultGit = new AtomicReference<>(null);
         showPopupScene(CreateRepositoryController.class,
-                "/com/example/fxjgit/forms/popup-create-repository.fxml",
+                "/com/example/fxjgit/forms/popups/popup-create-repository.fxml",
                 "#createButton",
                 git ->  resultGit.set(git) );
         System.out.println(resultGit.get());
@@ -37,7 +38,7 @@ public class StartWindowController {
     public void onCloneButtonClicked(MouseEvent event) {
         AtomicReference<Git> resultGit = new AtomicReference<>(null);
         showPopupScene(CloneRepositoryController.class,
-                "/com/example/fxjgit/forms/popup-clone-repository.fxml",
+                "/com/example/fxjgit/forms/popups/popup-clone-repository.fxml",
                 "#cloneButton",
                 git -> resultGit.set(git));
         System.out.println(resultGit.get());
@@ -45,8 +46,8 @@ public class StartWindowController {
 
     public void onExistingButtonClicked(MouseEvent event) {
         AtomicReference<Git> resultGit = new AtomicReference<>(null);
-        showPopupScene(CloneRepositoryController.class,
-                "/com/example/fxjgit/forms/popup-existing-repository.fxml",
+        showPopupScene(ExistingRepositoryController.class,
+                "/com/example/fxjgit/forms/popups/popup-existing-repository.fxml",
                 "#openButton",
                 git -> resultGit.set(git));
         System.out.println(resultGit.get());
@@ -75,18 +76,19 @@ public class StartWindowController {
                     T typedController = controllerType.cast(controller);
                     if (IPopup.class.isAssignableFrom(IPopup.class)) {
                         IPopup repositoryController = (IPopup) typedController;
-                        result = repositoryController.returnValueOnClose();
+                        result = repositoryController.finalAction();
                     }
                 }
                 resultHandler.accept(result); // Передаем результат обратно в вызывающий код
                 popupStage.close();
             });
 
-            popupStage.setOnCloseRequest(e -> {
+            popupStage.setOnCloseRequest (e -> {
                 if (IPopup.class.isAssignableFrom(IPopup.class)) {
                     IPopup repositoryController = (IPopup) controller;
-                    Git result = repositoryController.returnValueOnClose();
+                    Git result = repositoryController.finalAction();
                     resultHandler.accept(result); // Передаем результат обратно в вызывающий код
+                    System.out.println(result);
                 }
             });
 
