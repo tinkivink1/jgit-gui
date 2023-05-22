@@ -10,12 +10,12 @@
     <Label text="Create a new repository" styleClass="popup-title" />
     <VBox spacing="6">
         <Label text="Name" styleClass="popup-label" />
-        <TextField promptText="Repository name" styleClass="popup-textfield" fx:id="nameTextField" onTextChange="#validateInput"/>
+        <TextField promptText="Repository name" styleClass="popup-textfield" fx:id="nameTextField"/>
     </VBox>
 
     <VBox spacing="6">
         <Label text="Description" styleClass="popup-label" />
-        <TextField promptText="Repository description" styleClass="popup-textfield" fx:id="descriptionTextField" onTextChange="#validateInput"/>
+        <TextField promptText="Repository description" styleClass="popup-textfield" fx:id="descriptionTextField"/>
     </VBox>
 
     <VBox spacing="6">

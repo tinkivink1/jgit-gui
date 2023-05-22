@@ -19,8 +19,8 @@
                 <VBox fx:id="buttonContainer"  spacing="10" maxWidth="Infinity" HBox.hgrow="ALWAYS">
                     <Button fx:id="createButton" onMouseClicked="#onCreateButtonClicked" maxWidth="Infinity"
                             text="Create a new repository" HBox.hgrow="ALWAYS"/>
-                    <Button fx:id="cloneButton" maxWidth="Infinity" text="Clone repository" HBox.hgrow="ALWAYS" />
-                    <Button fx:id="addExistingButton" maxWidth="Infinity" text="Add existing repository" HBox.hgrow="ALWAYS" />
+                    <Button fx:id="cloneButton" onMouseClicked="#onCloneButtonClicked" maxWidth="Infinity" text="Clone repository" HBox.hgrow="ALWAYS" />
+                    <Button fx:id="addExistingButton" onMouseClicked="#onExistingButtonClicked" maxWidth="Infinity" text="Add existing repository" HBox.hgrow="ALWAYS" />
                     <Region VBox.vgrow="ALWAYS" />
                     <Button maxWidth="Infinity" text="Добавил для красотыыыыыы" HBox.hgrow="ALWAYS" />
                 </VBox>

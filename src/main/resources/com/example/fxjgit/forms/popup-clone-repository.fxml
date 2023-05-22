@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER_LEFT" spacing="10"
+      styleClass="popup-container" fx:controller="com.example.fxjgit.CloneRepositoryController" stylesheets="@../styles/popup-create-style.css">
+    <Label text="Clone a repository" styleClass="popup-title" />
+
+    <VBox spacing="6">
+        <Label text="Repository URL" styleClass="popup-label" />
+        <TextField promptText="Enter repository URL" styleClass="popup-textfield" fx:id="urlTextField"/>
+    </VBox>
+
+    <VBox spacing="6">
+        <Label text="Local path" styleClass="popup-label" />
+        <HBox spacing="10">
+            <TextField promptText="Selected Location" fx:id="selectedLocationTextField" editable="false" styleClass="popup-textfield" HBox.hgrow="ALWAYS" onTextChange="#validateInput"/>
+            <Button text="Select Location" onAction="#onSelectLocationButtonClicked" styleClass="popup-button" />
+        </HBox>
+    </VBox>
+
+    <Button text="Clone" styleClass="popup-button" onAction="#cloneRepository" minWidth="100" fx:id="cloneButton"/>
+</VBox>
