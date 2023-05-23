@@ -4,37 +4,27 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.util.Callback;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.StatusCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoHeadException;
-import org.eclipse.jgit.diff.*;
 import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-import org.eclipse.jgit.treewalk.AbstractTreeIterator;
-import org.eclipse.jgit.treewalk.CanonicalTreeParser;
-import org.eclipse.jgit.treewalk.FileTreeIterator;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
-import org.eclipse.jgit.util.io.DisabledOutputStream;
-import org.eclipse.jgit.diff.Edit;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -48,6 +38,9 @@ public class HelloController implements Initializable {
     @FXML
     public SplitPane contentSplitPane;
     public ListView commitChangesListView;
+    public HBox menuHbox;
+
+
     @FXML
     private BorderPane rootPane;
 
@@ -81,30 +74,23 @@ public class HelloController implements Initializable {
     private Repository repository;
     private Git git;
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            // Открываем репозиторий
-            repository = openRepository("C:\\Users\\Valodya\\Desktop\\jgit-gui");
-            git = new Git(repository);
+            updateScreen();
 
-            // Загружаем список изменений
-            loadChangesList();
-
-            // Загружаем историю коммитов
-            loadCommitHistory();
-
-            // Загружаем список файлов
-//            loadFileList();
         } catch (IOException | GitAPIException e) {
             e.printStackTrace();
         }
+
 
         changesListView.setOnMouseClicked(event -> {
             String selectedFile = changesListView.getSelectionModel().getSelectedItem();
             if (selectedFile != null) {
                 try {
-                    loadChangesToListView(selectedFile);
+//                    loadChangesToListView(selectedFile);
+                    getCurrentDiffs(selectedFile);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -146,7 +132,40 @@ public class HelloController implements Initializable {
             commitChangesListView.setItems(changes);
         });
 
+        commitChangesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            String selectedCommit = historyListView.getSelectionModel().getSelectedItem();
+            String selectedFile = (String) commitChangesListView.getSelectionModel().getSelectedItem();
+            selectedCommit = selectedCommit.replace("\n", "");
+            RevCommit selectedCommitData = null;
+            try {
+                selectedCommitData = findCommitByMessage(selectedCommit);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            RevCommit parentCommitData = selectedCommitData.getParent(0);
 
+            try {
+                String oldData = getFileContentFromCommit(git.getRepository(), selectedCommitData, selectedFile);
+                String newData = getFileContentFromCommit(git.getRepository(), parentCommitData, selectedFile);
+
+                List<String> diffList = generateDiff(oldData, newData);
+
+                loadChangesToListView(diffList, fileListView);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void updateScreen() throws GitAPIException, IOException {
+        if(git != null){
+            loadChangesList();
+            loadCommitHistory();
+        }
+
+    }
+    public void setGit(Git git) throws IOException {
+        this.git = git;
     }
     public static List<String> getAffectedFiles(Repository repository, ObjectId commitId) throws IOException {
         List<String> affectedFiles = new ArrayList<>();
@@ -192,51 +211,58 @@ public RevCommit findCommitByMessage(String commitMessage) throws IOException {
         return null;
     }
 
-    private void loadChangesToListView(String fileName) throws IOException {
+
+    private List<String> getCurrentDiffs(String filename) throws IOException {
+        Repository repository = git.getRepository();
+        // Get the latest commit
+        RevCommit commit = getLatestCommit(repository);
+
+        // Get the file content from the latest commit
+        String lastCommitContent = getFileContentFromCommit(repository, commit, filename);
+
+        // Get the current file content
+        Path currentPath = Paths.get(git.getRepository().getDirectory() + "\\..\\", filename);
+        String currentContent = new String(Files.readAllBytes(currentPath));
+
+        // Compare the contents and generate the diff
+        List<String> diffList = generateDiff(lastCommitContent, currentContent);
+
+        loadChangesToListView(diffList, fileListView);
+        return diffList;
+    }
+
+    private void loadChangesToListView(List<String> diffList, ListView dstListView) throws IOException {
         // Load the Git repository
-        try (Repository repository = git.getRepository()) {
-            // Get the latest commit
-            RevCommit commit = getLatestCommit(repository);
 
-            // Get the file content from the latest commit
-            String lastCommitContent = getFileContentFromCommit(repository, commit, fileName);
 
-            // Get the current file content
-            Path currentPath = Paths.get(git.getRepository().getDirectory() + "\\..\\", fileName);
-            String currentContent = new String(Files.readAllBytes(currentPath));
+        // Create an ObservableList to store the changes
+        ObservableList<String> changes = FXCollections.observableArrayList(diffList);
 
-            // Compare the contents and generate the diff
-            List<String> diffList = generateDiff(lastCommitContent, currentContent);
+        // Set the changes list to the ListView
+        dstListView.setItems(changes);
 
-            // Create an ObservableList to store the changes
-            ObservableList<String> changes = FXCollections.observableArrayList(diffList);
+        // Set cell factory to apply styles to list cells
+        dstListView.setCellFactory(listView -> new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
 
-            // Set the changes list to the ListView
-            fileListView.setItems(changes);
+                if (item == null || empty) {
+                    setText(null);
+                    setStyle("");  // Clear any existing styles
+                } else {
+                    setText(item);
 
-            // Set cell factory to apply styles to list cells
-            fileListView.setCellFactory(listView -> new ListCell<String>() {
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-
-                    if (item == null || empty) {
-                        setText(null);
-                        setStyle("");  // Clear any existing styles
-                    } else {
-                        setText(item);
-
-                        // Apply styles based on the content of the item
-                        getStyleClass().removeAll("deleted", "added");
-                        if (item.startsWith("-")) {
-                            getStyleClass().add("deleted");
-                        } else if (item.startsWith("+")) {
-                            getStyleClass().add("added");
-                        }
+                    // Apply styles based on the content of the item
+                    getStyleClass().removeAll("deleted", "added");
+                    if (item.startsWith("-")) {
+                        getStyleClass().add("deleted");
+                    } else if (item.startsWith("+")) {
+                        getStyleClass().add("added");
                     }
                 }
-            });
-        }
+            }
+        });
     }
 
 

@@ -14,7 +14,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class CloneRepositoryController implements Initializable, IPopup {
+    public class CloneRepositoryController implements Initializable, IPopup {
 
     @FXML
     private TextField urlTextField;

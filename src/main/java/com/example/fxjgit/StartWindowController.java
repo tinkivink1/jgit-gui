@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
@@ -26,33 +27,62 @@ public class StartWindowController {
 
     private IPopup popupEndsListener;
 
-    public void onCreateButtonClicked(MouseEvent event) {
+    Stage parentStage;
+
+    public void setParentStage(Stage stage){
+        parentStage=stage;
+    }
+    public void onCreateButtonClicked(MouseEvent event) throws IOException {
         AtomicReference<Git> resultGit = new AtomicReference<>(null);
         showPopupScene(CreateRepositoryController.class,
                 "/com/example/fxjgit/forms/popups/popup-create-repository.fxml",
                 "#createButton",
                 git ->  resultGit.set(git) );
         System.out.println(resultGit.get());
+        if (resultGit.get() != null){
+            nextScene(resultGit.get());
+        }
     }
 
-    public void onCloneButtonClicked(MouseEvent event) {
+    public void onCloneButtonClicked(MouseEvent event) throws IOException {
         AtomicReference<Git> resultGit = new AtomicReference<>(null);
         showPopupScene(CloneRepositoryController.class,
                 "/com/example/fxjgit/forms/popups/popup-clone-repository.fxml",
                 "#cloneButton",
                 git -> resultGit.set(git));
         System.out.println(resultGit.get());
+        if (resultGit.get() != null){
+            nextScene(resultGit.get());
+        }
     }
 
-    public void onExistingButtonClicked(MouseEvent event) {
+    public void onExistingButtonClicked(MouseEvent event) throws IOException {
         AtomicReference<Git> resultGit = new AtomicReference<>(null);
         showPopupScene(ExistingRepositoryController.class,
                 "/com/example/fxjgit/forms/popups/popup-existing-repository.fxml",
                 "#openButton",
                 git -> resultGit.set(git));
         System.out.println(resultGit.get());
+        if (resultGit.get() != null){
+            nextScene(resultGit.get());
+        }
     }
 
+
+    private  void nextScene(Git git) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/com/example/fxjgit/forms/hello-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 1080, 720);
+        HelloController helloController = fxmlLoader.getController();
+        helloController.setGit(git);
+        try {
+            helloController.updateScreen();
+        } catch (GitAPIException e) {
+            e.printStackTrace();
+        }
+        parentStage.setTitle("Jgit FX");
+        parentStage.setScene(scene);
+        parentStage.show();
+    }
     private <T> void showPopupScene(Class<T> controllerType, String pathToScene, String actionButtonName, Consumer<Git> resultHandler){
         // Загружаем разметку из FXML-файла
         Parent root = null;
