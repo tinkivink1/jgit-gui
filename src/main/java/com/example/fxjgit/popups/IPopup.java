@@ -1,4 +1,4 @@
-package com.example.fxjgit;
+package com.example.fxjgit.popups;
 
 import org.eclipse.jgit.api.Git;
 

@@ -1,5 +1,6 @@
-package com.example.fxjgit;
+package com.example.fxjgit.popups;
 
+import com.example.fxjgit.JgitApi;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

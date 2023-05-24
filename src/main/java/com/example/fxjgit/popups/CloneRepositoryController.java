@@ -1,5 +1,6 @@
-package com.example.fxjgit;
+package com.example.fxjgit.popups;
 
+import com.example.fxjgit.JgitApi;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,41 +14,30 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class CreateRepositoryController implements Initializable, IPopup {
-    @FXML
-    public TextField nameTextField;
-    @FXML
-    public TextField descriptionTextField;
-    @FXML
-    public TextField selectedLocationTextField;
+    public class CloneRepositoryController implements Initializable, IPopup {
 
     @FXML
-    public Button createButton;
-    @FXML
-    private String title = "Create a new repository";
-
-    private Git git;
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-    }
+    private TextField urlTextField;
 
     @FXML
-    public void initialize() {
+    private TextField selectedLocationTextField;
+
+    @FXML
+    public Button cloneButton;
+
+    @FXML
+    private String title = "Clone repository";
+
+    Git git;
+    @FXML
+    private void initialize() {
         // ставим заголовок окна через костыль
-        createButton.setDisable(true);
-        Stage currentStage = (Stage)createButton.getScene().getWindow();
+        cloneButton.setDisable(true);
+        Stage currentStage = (Stage)cloneButton.getScene().getWindow();
         currentStage.setTitle(title);
 
-
         // Установка слушателя событий изменения текста
-        nameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            // Действие, которое нужно выполнить при изменении текста
-            validateInput();
-        });
-
-        descriptionTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+        urlTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             // Действие, которое нужно выполнить при изменении текста
             validateInput();
         });
@@ -57,6 +47,7 @@ public class CreateRepositoryController implements Initializable, IPopup {
             validateInput();
         });
     }
+
     @FXML
     private void onSelectLocationButtonClicked(ActionEvent event) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -73,27 +64,35 @@ public class CreateRepositoryController implements Initializable, IPopup {
         }
     }
 
+    @FXML
+    private Git cloneRepository() {
+        // Обработчик нажатия кнопки "Clone"
+        String repositoryURL = urlTextField.getText();
+        String localPath = selectedLocationTextField.getText();
 
-    public Git createNewRepository() {
-        this.git = JgitApi.initializeRepository(selectedLocationTextField.getText());
+       this.git = JgitApi.cloneRepository(repositoryURL, localPath);
 
-        return this.git;
+       return this.git;
     }
 
     @FXML
     private void validateInput() {
-        if(!nameTextField.getText().isEmpty()
-        && !descriptionTextField.getText().isEmpty()
-        && !selectedLocationTextField.getText().isEmpty()){
-            createButton.setDisable(false);
+        if(!urlTextField.getText().isEmpty()
+                && !selectedLocationTextField.getText().isEmpty()){
+            cloneButton.setDisable(false);
         }
         else{
-            createButton.setDisable(true);
+            cloneButton.setDisable(true);
         }
     }
 
     @Override
     public Git finalAction() {
-        return createNewRepository();
+        return cloneRepository();
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
     }
 }

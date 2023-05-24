@@ -1,5 +1,9 @@
 package com.example.fxjgit;
 
+import com.example.fxjgit.popups.CloneRepositoryController;
+import com.example.fxjgit.popups.CreateRepositoryController;
+import com.example.fxjgit.popups.ExistingRepositoryController;
+import com.example.fxjgit.popups.IPopup;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

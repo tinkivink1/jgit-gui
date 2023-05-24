@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER_LEFT" spacing="10"
-      styleClass="popup-container" fx:controller="com.example.fxjgit.CloneRepositoryController" stylesheets="@../../styles/popup-create-style.css">
+      styleClass="popup-container" fx:controller="com.example.fxjgit.popups.CloneRepositoryController" stylesheets="@../../styles/popup-create-style.css">
     <Label text="Clone a repository" styleClass="popup-title" />
 
     <VBox spacing="6">
