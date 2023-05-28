@@ -15,6 +15,17 @@ public class User {
         this.repositories = repositories;
     }
 
+    public User(String username, String password, List<Repository> repositories) {
+        this.username = username;
+        this.password = password;
+        this.repositories = repositories;
+    }
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     // Геттеры и сеттеры
     public int getUserId() {
         return userId;
@@ -46,5 +57,16 @@ public class User {
 
     public void setRepositories(List<Repository> repositories) {
         this.repositories = repositories;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User that = (User) o;
+
+        if (username.equals(that.username)) return false;
+        return password.equals(that.password);
     }
 }

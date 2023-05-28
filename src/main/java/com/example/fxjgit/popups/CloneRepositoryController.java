@@ -1,6 +1,7 @@
 package com.example.fxjgit.popups;
 
 import com.example.fxjgit.JgitApi;
+import com.example.fxjgit.db.entities.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -9,12 +10,16 @@ import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.TransportConfigCallback;
+import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.transport.TransportHttp;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-    public class CloneRepositoryController implements Initializable, IPopup {
+public class CloneRepositoryController implements Initializable, IPopup {
 
     @FXML
     private TextField urlTextField;
@@ -29,6 +34,9 @@ import java.util.ResourceBundle;
     private String title = "Clone repository";
 
     Git git;
+    User user;
+
+
     @FXML
     private void initialize() {
         // ставим заголовок окна через костыль
@@ -46,6 +54,13 @@ import java.util.ResourceBundle;
             // Действие, которое нужно выполнить при изменении текста
             validateInput();
         });
+    }
+
+    public User getUser() {
+        return user;
+    }
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @FXML
@@ -69,10 +84,11 @@ import java.util.ResourceBundle;
         // Обработчик нажатия кнопки "Clone"
         String repositoryURL = urlTextField.getText();
         String localPath = selectedLocationTextField.getText();
-
-       this.git = JgitApi.cloneRepository(repositoryURL, localPath);
-
-       return this.git;
+        if (user != null){
+            CredentialsProvider cp = new UsernamePasswordCredentialsProvider(user.getUsername(), user.getPassword());
+            return JgitApi.cloneRepository(cp, repositoryURL, localPath);
+        }
+       return JgitApi.cloneRepository(repositoryURL, localPath);
     }
 
     @FXML

@@ -176,29 +176,25 @@ TextField {
 
 /*checkbox (для строк изменений)*/
 .checkbox {
-    -fx-padding: 0;
-    -fx-spacing: 5px;
-    -fx-alignment: center-left;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
+    -fx-padding: 5px;
 }
 
-.checkbox .box {
-    -fx-background-color: #F1F1F1;
-    -fx-border-color: #D1D1D1;
+.checkbox-box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #c8c8c8;
     -fx-border-radius: 3px;
-    -fx-pref-width: 20px;
-    -fx-pref-height: 20px;
+    -fx-border-width: 1px;
+    -fx-padding: 2px;
 }
 
-.checkbox:selected .box {
-    -fx-background-color: #4078C0;
-    -fx-border-color: #4078C0;
+.checkbox-box:selected {
+    -fx-background-color: #3399ff;
+    -fx-border-color: #3399ff;
 }
 
-.checkbox .check-icon {
-    -fx-fill: white;
-    -fx-font-size: 12px;
+.checkbox .label {
+    -fx-padding: 0 0 0 5px;
+    -fx-text-fill: #000000;
 }
 
 /* стили TabPane*/

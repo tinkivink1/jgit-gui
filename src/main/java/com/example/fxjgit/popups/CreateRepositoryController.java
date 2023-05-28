@@ -1,6 +1,7 @@
 package com.example.fxjgit.popups;
 
 import com.example.fxjgit.JgitApi;
+import com.example.fxjgit.db.entities.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -28,6 +29,7 @@ public class CreateRepositoryController implements Initializable, IPopup {
     private String title = "Create a new repository";
 
     private Git git;
+    User user;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -96,5 +98,10 @@ public class CreateRepositoryController implements Initializable, IPopup {
     @Override
     public Git finalAction() {
         return createNewRepository();
+    }
+
+    @Override
+    public void setUser(User user) {
+        this.user = user;
     }
 }

@@ -9,8 +9,7 @@ public class ConnectionDB {
         Connection connection = null;
         try {
             // Загружаем драйвер JDBC
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-
+            Class.forName("org.postgresql.Driver");
             // Устанавливаем соединение
             connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 

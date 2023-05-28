@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fxjgit.enter.RegistrationController"
+      stylesheets="@../../styles/github-like-style.css"
+        spacing="10"
+        style="-fx-padding: 25">
+
+    <VBox spacing="5">
+        <Label text="Логин"/>
+        <TextField fx:id="usernameField"/>
+    </VBox>
+
+    <VBox spacing="5">
+        <Label text="Пароль"/>
+        <TextField fx:id="passwordField"/>
+    </VBox>
+
+    <Button text="Зарегистрироваться" onAction="#registerButtonClicked" fx:id="registerButton"/>
+</VBox>

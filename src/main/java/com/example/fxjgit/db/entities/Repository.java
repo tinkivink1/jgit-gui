@@ -13,6 +13,17 @@ public class Repository {
         this.localPath = localPath;
     }
 
+    public Repository(int userId, String remoteLink, String localPath) {
+        this.userId = userId;
+        this.remoteLink = remoteLink;
+        this.localPath = localPath;
+    }
+
+    public Repository(int userId, String localPath) {
+        this.userId = userId;
+        this.remoteLink = "";
+        this.localPath = localPath;
+    }
     // Геттеры и сеттеры
     public int getRepositoryId() {
         return repositoryId;
@@ -44,5 +55,18 @@ public class Repository {
 
     public void setLocalPath(String localPath) {
         this.localPath = localPath;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Repository that = (Repository) o;
+
+        if (!localPath.equals(that.getLocalPath()) || !remoteLink.equals(that.getRemoteLink()) || userId != that.getUserId())
+            return false;
+
+        return true;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.fxjgit;
 
+import com.example.fxjgit.db.entities.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,9 +18,14 @@ import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.StatusCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoHeadException;
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.diff.Edit;
+import org.eclipse.jgit.diff.RawText;
 import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
 
@@ -48,7 +54,7 @@ public class HelloController implements Initializable {
     private TabPane tabPane;
 
     @FXML
-    private ListView<String> changesListView;
+    private ListView<CheckBox> changesListView;
 
     @FXML
     private ListView<String> historyListView;
@@ -74,87 +80,97 @@ public class HelloController implements Initializable {
     private Repository repository;
     private Git git;
 
-
+    User user;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             updateScreen();
-
         } catch (IOException | GitAPIException e) {
             e.printStackTrace();
         }
 
+        changesListView
+                .getSelectionModel()
+                .selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> onChangesListviewClicked(newValue));
 
-        changesListView.setOnMouseClicked(event -> {
-            String selectedFile = changesListView.getSelectionModel().getSelectedItem();
-            if (selectedFile != null) {
-                try {
-//                    loadChangesToListView(selectedFile);
-                    getCurrentDiffs(selectedFile);
-                } catch (IOException e) {
-                    e.printStackTrace();
+        historyListView
+                .getSelectionModel()
+                .selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> onHistoryListviewClicked(newValue));
+
+        commitChangesListView
+                .getSelectionModel()
+                .selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> onCommitChangesClicked((String) newValue));
+    }
+
+    private ObservableList<String> loadChangesToListView(Git git, ObjectId oldCommit, ObjectId newCommit, String fileName) throws IOException, GitAPIException {
+        CanonicalTreeParser newTreeParser = new CanonicalTreeParser();
+        try (var reader = git.getRepository().newObjectReader()) {
+            var head = newCommit;
+            newTreeParser.reset(reader, head);
+        }
+
+        // Get the previous commit
+        Iterable<RevCommit> commits = git.log().setMaxCount(1).call();
+        RevCommit commit = commits.iterator().next();
+
+        // Get the previous file tree
+        CanonicalTreeParser oldTreeParser = new CanonicalTreeParser();
+        try (var reader = git.getRepository().newObjectReader()) {
+            var oldHead = oldCommit;
+            oldTreeParser.reset(reader, oldHead);
+        }
+
+        // Perform diff between the two file trees
+        List<DiffEntry> diffs = git.diff()
+                .setNewTree(newTreeParser)
+                .setOldTree(oldTreeParser)
+                .call();
+
+        // Create an ObservableList to store the changes
+        ObservableList<String> changes = FXCollections.observableArrayList();
+
+        // Generate diff for the specified file
+        for (DiffEntry diff : diffs) {
+            if (diff.getNewPath().equals(fileName)) {
+                // Create a formatter for generating the diff text
+                try (var reader = git.getRepository().newObjectReader()) {
+                    var oldObjectId = diff.getOldId().toObjectId();
+                    var newObjectId = diff.getNewId().toObjectId();
+                    var oldText = new RawText(reader.open(oldObjectId).getBytes());
+                    var newText = new RawText(reader.open(newObjectId).getBytes());
+                    var diffFormatter = new DiffFormatter(System.out);
+                    var edits = diffFormatter.toFileHeader(diff).toEditList();
+
+                    // Generate the diff text for the specified file
+                    StringBuilder diffTextBuilder = new StringBuilder();
+                    for (Edit edit : edits) {
+                        for (int i = edit.getBeginA(); i < edit.getEndA(); i++) {
+                            diffTextBuilder.append(oldText.getString(i)).append("\n");
+                        }
+                        for (int i = edit.getBeginB(); i < edit.getEndB(); i++) {
+                            diffTextBuilder.append(newText.getString(i)).append("\n");
+                        }
+                    }
+
+                    // Add the diff text to the changes list
+                    changes.add(diffTextBuilder.toString());
                 }
             }
-        });
+        }
 
-        changesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            // При выборе элемента changesListView
-            if (newValue != null) {
-                commitChangesListView.setVisible(false);
-                contentSplitPane.setDividerPositions(0);
-            }
-        });
+        // Set the changes list to the ListView
+        return changes;
+    }
 
-        historyListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            // При выборе элемента historyListView
-            if (newValue != null) {
-                commitChangesListView.setVisible(true);
-                contentSplitPane.setDividerPositions(0.3);
-            }
-        });
+    public User getUser() {
+        return user;
+    }
 
-        historyListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            // Получение выбранного элемента (название коммита)
-            String selectedCommit = historyListView.getSelectionModel().getSelectedItem();
-            selectedCommit = selectedCommit.replace("\n", "");
-            // Получение списка измененных файлов для выбранного коммита
-            List<String> commitChanges = null;
-            try {
-                RevCommit revCommit = findCommitByMessage(selectedCommit);
-                commitChanges = getAffectedFiles(git.getRepository(), revCommit.toObjectId());
-                fillCommitChangesList(commitChanges);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
-            // Отображение списка измененных файлов в commitChangesListView
-            ObservableList<String> changes = FXCollections.observableArrayList(commitChanges);
-            commitChangesListView.setItems(changes);
-        });
-
-        commitChangesListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            String selectedCommit = historyListView.getSelectionModel().getSelectedItem();
-            String selectedFile = (String) commitChangesListView.getSelectionModel().getSelectedItem();
-            selectedCommit = selectedCommit.replace("\n", "");
-            RevCommit selectedCommitData = null;
-            try {
-                selectedCommitData = findCommitByMessage(selectedCommit);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            RevCommit parentCommitData = selectedCommitData.getParent(0);
-
-            try {
-                String oldData = getFileContentFromCommit(git.getRepository(), selectedCommitData, selectedFile);
-                String newData = getFileContentFromCommit(git.getRepository(), parentCommitData, selectedFile);
-
-                List<String> diffList = generateDiff(oldData, newData);
-
-                loadChangesToListView(diffList, fileListView);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void updateScreen() throws GitAPIException, IOException {
@@ -164,71 +180,9 @@ public class HelloController implements Initializable {
         }
 
     }
+
     public void setGit(Git git) throws IOException {
         this.git = git;
-    }
-    public static List<String> getAffectedFiles(Repository repository, ObjectId commitId) throws IOException {
-        List<String> affectedFiles = new ArrayList<>();
-
-        try (RevWalk revWalk = new RevWalk(repository)) {
-            ObjectId commitObjectId = commitId;
-            RevCommit commit = revWalk.parseCommit(commitObjectId);
-
-            try (TreeWalk treeWalk = new TreeWalk(repository)) {
-                treeWalk.addTree(commit.getTree());
-                treeWalk.setRecursive(true);
-
-                while (treeWalk.next()) {
-                    affectedFiles.add(treeWalk.getPathString());
-                }
-            }
-        }
-        return affectedFiles;
-    }
-
-
-
-
-
-
-public RevCommit findCommitByMessage(String commitMessage) throws IOException {
-        Repository repository = git.getRepository();
-
-        try (RevWalk revWalk = new RevWalk(repository)) {
-            Iterable<RevCommit> commits = git.log().all().call();
-
-            for (RevCommit commit : commits) {
-                if (commit.getShortMessage().equals(commitMessage)) {
-                    return commit;
-                }
-            }
-        } catch (NoHeadException e) {
-            e.printStackTrace();
-        } catch (GitAPIException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-
-    private List<String> getCurrentDiffs(String filename) throws IOException {
-        Repository repository = git.getRepository();
-        // Get the latest commit
-        RevCommit commit = getLatestCommit(repository);
-
-        // Get the file content from the latest commit
-        String lastCommitContent = getFileContentFromCommit(repository, commit, filename);
-
-        // Get the current file content
-        Path currentPath = Paths.get(git.getRepository().getDirectory() + "\\..\\", filename);
-        String currentContent = new String(Files.readAllBytes(currentPath));
-
-        // Compare the contents and generate the diff
-        List<String> diffList = generateDiff(lastCommitContent, currentContent);
-
-        loadChangesToListView(diffList, fileListView);
-        return diffList;
     }
 
     private void loadChangesToListView(List<String> diffList, ListView dstListView) throws IOException {
@@ -265,78 +219,24 @@ public RevCommit findCommitByMessage(String commitMessage) throws IOException {
         });
     }
 
-
-    private RevCommit getLatestCommit(Repository repository) throws IOException {
-        try (RevWalk walk = new RevWalk(repository)) {
-            RevCommit commit = walk.parseCommit(repository.resolve("HEAD"));
-            return commit;
-        }
-    }
-
-    private String getFileContentFromCommit(Repository repository, RevCommit commit, String fileName)
-            throws IOException {
-        try (TreeWalk treeWalk = new TreeWalk(repository)) {
-            treeWalk.addTree(commit.getTree());
-            treeWalk.setRecursive(true);
-            treeWalk.setFilter(PathFilter.create(fileName));
-
-            if (treeWalk.next()) {
-                ObjectId objectId = treeWalk.getObjectId(0);
-                try (org.eclipse.jgit.lib.ObjectReader reader = repository.newObjectReader()) {
-                    return new String(reader.open(objectId).getBytes());
-                }
-            }
-        }
-
-        return "";
-    }
-
-
-    private List<String> generateDiff(String oldContent, String newContent) {
-        // Implement your own diff generation logic here
-        // This can be done using libraries like diffutils or by implementing your own diff algorithm
-        // Here's a simple example using string comparison
-        List<String> diffList = new ArrayList<>();
-
-        String[] oldLines = oldContent.split("\\r?\\n");
-        String[] newLines = newContent.split("\\r?\\n");
-
-        for (int i = 0; i < oldLines.length; i++) {
-            if (i >= newLines.length || !oldLines[i].equals(newLines[i])) {
-                diffList.add("- \t" + (i + 1) + ": " + oldLines[i]);
-                if (i < newLines.length) {
-                    diffList.add("+ \t" + (i + 1) + ": " + newLines[i]);
-                }
-            } else {
-                diffList.add("  \t" + (i + 1) + ": " + oldLines[i]);
-            }
-        }
-
-        if (oldLines.length < newLines.length) {
-            for (int i = oldLines.length; i < newLines.length; i++) {
-                diffList.add("+ \t" + (i + 1) + ": " + newLines[i]);
-            }
-        }
-
-        return diffList;
-    }
-
-    private Repository openRepository(String repositoryPath) throws IOException {
-        Path path = Paths.get(repositoryPath);
-        return JgitApi.openRepository(path.toString()).getRepository();
-    }
-
-    private void loadChangesList() throws IOException, GitAPIException {
+    private void loadChangesList() {
         changesListView.getItems().clear();
 
-        // Выполняем команду git status
         StatusCommand statusCommand = git.status();
-        Status status = statusCommand.call();
-
-        // Добавляем измененные файлы в список изменений
-        for (String changedFile : status.getModified()) {
-            changesListView.getItems().add(changedFile);
+        Status status = null;
+        try {
+            status = statusCommand.call();
+            for (String changedFile : status.getModified()) {
+                CheckBox checkBox = new CheckBox();
+                checkBox.setSelected(true);
+                checkBox.setText(changedFile);
+                changesListView.getItems().add(checkBox);
+            }
+        } catch (GitAPIException e) {
+            e.printStackTrace();
         }
+
+
     }
 
     private void fillCommitChangesList(List<String> changes)  {
@@ -348,15 +248,83 @@ public RevCommit findCommitByMessage(String commitMessage) throws IOException {
         }
     }
 
-    private void loadCommitHistory() throws GitAPIException {
+    private void loadCommitHistory() {
         historyListView.getItems().clear();
 
-        // Получаем список коммитов текущей ветки
-        Iterable<RevCommit> commits = git.log().call();
+        try {
+            // Получаем список коммитов текущей ветки
+            Iterable<RevCommit> commits = git.log().call();
 
-        // Добавляем каждый коммит в историю
-        for (RevCommit commit : commits) {
-            historyListView.getItems().add(commit.getFullMessage());
+            // Добавляем каждый коммит в историю
+            for (RevCommit commit : commits) {
+                historyListView.getItems().add(commit.getFullMessage());
+            }
+        }
+        catch (NoHeadException e) {
+            e.printStackTrace();
+        }
+        catch (GitAPIException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void onChangesListviewClicked(CheckBox newCheckboxValue){
+        String newValue = newCheckboxValue.getText();
+        // При выборе элемента changesListView
+        if (newValue != null) {
+            commitChangesListView.setVisible(false);
+            contentSplitPane.setDividerPositions(0);
+            try {
+                JgitApi.getCurrentDiffs(git, newValue);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void onHistoryListviewClicked(String newValue){
+        // При выборе элемента historyListView
+        if (newValue != null) {
+            commitChangesListView.setVisible(true);
+            contentSplitPane.setDividerPositions(0.3);
+        }
+        // Получение выбранного элемента (название коммита)
+        String selectedCommit = newValue;
+        selectedCommit = selectedCommit.replace("\n", "");
+        // Получение списка измененных файлов для выбранного коммита
+        List<String> commitChanges = null;
+        try {
+            RevCommit revCommit = JgitApi.findCommitByMessage(git, selectedCommit);
+            commitChanges = JgitApi.getAffectedFiles(git.getRepository(), revCommit.toObjectId());
+            fillCommitChangesList(commitChanges);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        // Отображение списка измененных файлов в commitChangesListView
+        ObservableList<String> changes = FXCollections.observableArrayList(commitChanges);
+        commitChangesListView.setItems(changes);
+    }
+
+    private void onCommitChangesClicked(String newValue){
+        String selectedCommit = historyListView
+                                    .getSelectionModel()
+                                    .getSelectedItem();
+        String selectedFile = ((String) commitChangesListView
+                                            .getSelectionModel()
+                                            .getSelectedItem())
+                                            .replace("\n", "");
+
+        try {
+            RevCommit selectedCommitData = JgitApi.findCommitByMessage(git, selectedCommit);
+            RevCommit parentCommitData = selectedCommitData.getParent(0);
+
+            String oldData = JgitApi.getFileContentFromCommit(git.getRepository(), selectedCommitData, selectedFile);
+            String newData = JgitApi.getFileContentFromCommit(git.getRepository(), parentCommitData, selectedFile);
+
+            loadChangesToListView(JgitApi.generateDiff(oldData, newData), fileListView);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -369,7 +337,7 @@ public RevCommit findCommitByMessage(String commitMessage) throws IOException {
             // Обновляем списки изменений и истории коммитов
             loadChangesList();
             loadCommitHistory();
-        } catch (GitAPIException | IOException e) {
+        } catch (GitAPIException e) {
             e.printStackTrace();
         }
     }
@@ -383,7 +351,7 @@ public RevCommit findCommitByMessage(String commitMessage) throws IOException {
             // Обновляем списки изменений и истории коммитов
             loadChangesList();
             loadCommitHistory();
-        } catch (GitAPIException | IOException e) {
+        } catch (GitAPIException e) {
             e.printStackTrace();
         }
     }
@@ -403,9 +371,4 @@ public RevCommit findCommitByMessage(String commitMessage) throws IOException {
         // Обработка события нажатия на кнопку Settings
     }
 
-
-
 }
-
-
-

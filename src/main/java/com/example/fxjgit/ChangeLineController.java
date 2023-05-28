@@ -8,15 +8,18 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ChangeLineController implements Initializable {
-    public boolean isChecked;
-    public String text;
     public CheckBox checkBox;
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
-        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            isChecked = newValue;
-        });
     }
+
+    public String getText(){
+        return checkBox.getText();
+    }
+
+    public void setText(String text){
+        checkBox.setText(text);
+    }
+
 }

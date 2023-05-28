@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.collections.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
 <BorderPane prefHeight="720" prefWidth="1080" stylesheets="@../styles/github-like-style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fxjgit.StartWindowController">
     <top>
@@ -27,28 +24,11 @@
                 <VBox  HBox.hgrow="ALWAYS" alignment="TOP_LEFT" spacing="15">
                     <HBox alignment="CENTER_LEFT" spacing="10">
                         <TextField promptText="Filter your repositories" HBox.hgrow="ALWAYS"/>
-                        <Button text="⟳" fx:id="reloadButton"/>
+                        <Button text="⟳" fx:id="reloadButton" onMouseClicked="#reloadRepositories"/>
                     </HBox>
                     <VBox spacing="7">
                         <Label text="History" textAlignment="CENTER"/>
-                        <ListView>
-                            <items>
-                                <FXCollections fx:factory="observableArrayList">
-                                    <String fx:value="Repo 1" />
-                                    <String fx:value="Repo 2" />
-                                    <String fx:value="Repo 3" />
-                                    <String fx:value="Repo 4" />
-                                    <String fx:value="Repo 5" />
-                                    <String fx:value="Repo 1" />
-                                    <String fx:value="Repo 1" />
-                                    <String fx:value="Repo 1" />
-                                    <String fx:value="Repo 1" />
-                                    <String fx:value="Repo 1" />
-                                    <String fx:value="Repo 1" />
-                                    <String fx:value="Repo 1" />
-                                </FXCollections>
-                            </items>
-                        </ListView>
+                        <ListView fx:id="repositoriesList"/>
                     </VBox>
                 </VBox>
             </HBox>

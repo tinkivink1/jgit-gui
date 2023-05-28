@@ -1,6 +1,7 @@
 package com.example.fxjgit.popups;
 
 import com.example.fxjgit.JgitApi;
+import com.example.fxjgit.db.entities.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,6 +25,8 @@ public class ExistingRepositoryController implements Initializable, IPopup{
     private String title = "Open existing repository";
 
     Git git;
+    User user;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -57,7 +60,7 @@ public class ExistingRepositoryController implements Initializable, IPopup{
         if(!pathTextField.getText().isEmpty()){
             openButton.setDisable(false);
         }
-        else{
+        else {
             openButton.setDisable(true);
         }
     }
@@ -67,6 +70,11 @@ public class ExistingRepositoryController implements Initializable, IPopup{
     @Override
     public Git finalAction() {
         return openRepository();
+    }
+
+    @Override
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @FXML
