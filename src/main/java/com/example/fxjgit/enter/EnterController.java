@@ -1,6 +1,6 @@
 package com.example.fxjgit.enter;
 
-import com.example.fxjgit.StartWindowController;
+import com.example.fxjgit.forms.StartWindowController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -34,7 +34,7 @@ public class EnterController {
     @FXML
     public void enterButtonClicked(ActionEvent event) throws IOException {
         // Обработчик нажатия кнопки "Войти без учетной записи"
-        nextScene(StartWindowController.class, "/com/example/fxjgit/forms/StartWindow.fxml");
+        nextScene(StartWindowController.class, "/com/example/fxjgit/forms/start-window.fxml");
     }
 
     public void nextScene(Class<?> controllerClass, String resourcePath) throws IOException {

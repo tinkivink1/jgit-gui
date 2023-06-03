@@ -3,6 +3,7 @@ module com.example.fxjgit {
     requires javafx.fxml;
     requires org.eclipse.jgit;
     requires java.sql;
+    requires org.apache.poi.ooxml;
 
 
     opens com.example.fxjgit to javafx.fxml;
@@ -10,4 +11,6 @@ module com.example.fxjgit {
     exports com.example.fxjgit.popups;
     exports com.example.fxjgit.enter;
     opens com.example.fxjgit.popups to javafx.fxml;
+    exports com.example.fxjgit.forms;
+    opens com.example.fxjgit.forms to javafx.fxml;
 }

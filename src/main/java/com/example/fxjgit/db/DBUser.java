@@ -39,6 +39,7 @@ public class DBUser implements ModelDAO<User> {
         }
         return instance;
     }
+
     @Override
     public List<User> getAll() {
         List<User> users = new ArrayList<>();

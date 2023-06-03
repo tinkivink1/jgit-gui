@@ -1,30 +1,31 @@
-package com.example.fxjgit;
+package com.example.fxjgit.forms;
 
+import com.example.fxjgit.JgitApi;
 import com.example.fxjgit.db.DBRepository;
 import com.example.fxjgit.db.DBUser;
 import com.example.fxjgit.db.entities.Repository;
 import com.example.fxjgit.db.entities.User;
+import com.example.fxjgit.forms.ProjectWindowController;
 import com.example.fxjgit.popups.CloneRepositoryController;
 import com.example.fxjgit.popups.CreateRepositoryController;
 import com.example.fxjgit.popups.ExistingRepositoryController;
 import com.example.fxjgit.popups.IPopup;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.*;
 import javafx.scene.input.MouseEvent;
 
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
 
@@ -42,17 +43,29 @@ public class StartWindowController {
     public Button addExistingButton;
     public ListView repositoriesList;
     public Button reloadButton;
+    public HBox menuHbox;
 
     Stage parentStage;
 
     User user;
 
+    private ToolsMenuController toolsMenuController = null;
     public StartWindowController(){
-
-
     }
 
     public void initialize(){
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("tools-menu.fxml"));
+            Node toolsMenu = loader.load();
+            menuHbox.getChildren().add(toolsMenu);
+            toolsMenuController = loader.getController();
+//            toolsMenuController.setGit();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         repositoriesList.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
                 Object selectedItem = repositoriesList.getSelectionModel().getSelectedItem();
@@ -69,6 +82,7 @@ public class StartWindowController {
 
     public void setParentStage(Stage stage){
         parentStage=stage;
+//        parentStage= (Stage) createButton.getScene().getWindow();
     }
 
     public void setUser(User user){
@@ -169,9 +183,10 @@ public class StartWindowController {
     }
 
     private  void nextScene(Git git) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/com/example/fxjgit/forms/hello-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(ProjectWindowController.class.getResource("/com/example/fxjgit/forms/project-window.fxml"));
+
         Scene scene = new Scene(fxmlLoader.load(), 1080, 720);
-        HelloController helloController = fxmlLoader.getController();
+        ProjectWindowController helloController = fxmlLoader.getController();
         helloController.setGit(git);
         helloController.setUser(user);
         try {

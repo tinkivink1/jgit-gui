@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionDB {
+
     public static Connection connect(String dbUrl, String dbUser, String dbPassword) {
         Connection connection = null;
         try {
@@ -15,8 +16,6 @@ public class ConnectionDB {
 
             // Подключение успешно
             System.out.println("Соединение с базой данных установлено.");
-
-            System.out.println("Соединение с базой данных закрыто.");
         } catch (ClassNotFoundException e) {
             System.out.println("Не удалось найти драйвер JDBC.");
             e.printStackTrace();
@@ -26,19 +25,18 @@ public class ConnectionDB {
         }
         return connection;
     }
+
     public static Connection connect(String dbUrl) {
         Connection connection = null;
         try {
             // Загружаем драйвер JDBC
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            Class.forName("org.postgresql.Driver");
 
             // Устанавливаем соединение
             connection = DriverManager.getConnection(dbUrl);
 
             // Подключение успешно
             System.out.println("Соединение с базой данных установлено.");
-
-            System.out.println("Соединение с базой данных закрыто.");
         } catch (ClassNotFoundException e) {
             System.out.println("Не удалось найти драйвер JDBC.");
             e.printStackTrace();

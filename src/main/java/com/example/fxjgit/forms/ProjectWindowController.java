@@ -1,5 +1,6 @@
-package com.example.fxjgit;
+package com.example.fxjgit.forms;
 
+import com.example.fxjgit.JgitApi;
 import com.example.fxjgit.db.entities.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -7,9 +8,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
+import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -24,27 +24,22 @@ import org.eclipse.jgit.diff.Edit;
 import org.eclipse.jgit.diff.RawText;
 import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
-import org.eclipse.jgit.treewalk.TreeWalk;
-import org.eclipse.jgit.treewalk.filter.PathFilter;
 
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class HelloController implements Initializable {
+public class ProjectWindowController implements Initializable {
     @FXML
     public VBox linesContainer;
     @FXML
     public SplitPane contentSplitPane;
-    public ListView commitChangesListView;
+
+
     public HBox menuHbox;
+    public TextField commitMessageTextField;
 
 
     @FXML
@@ -54,13 +49,16 @@ public class HelloController implements Initializable {
     private TabPane tabPane;
 
     @FXML
-    private ListView<CheckBox> changesListView;
+    private ListView<CheckBox> diffListView;
 
     @FXML
     private ListView<String> historyListView;
 
     @FXML
     private ListView<String> fileListView;
+
+    @FXML
+    public ListView<String> commitChangesListView;
 
     @FXML
     private TextField filterTextField;
@@ -80,19 +78,25 @@ public class HelloController implements Initializable {
     private Repository repository;
     private Git git;
 
+    private ToolsMenuController toolsMenuController = null;
     User user;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             updateScreen();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("tools-menu.fxml"));
+            Node toolsMenu = loader.load();
+            menuHbox.getChildren().add(toolsMenu);
+            toolsMenuController = loader.getController();
         } catch (IOException | GitAPIException e) {
             e.printStackTrace();
         }
 
-        changesListView
+
+        diffListView
                 .getSelectionModel()
                 .selectedItemProperty()
-                .addListener((observable, oldValue, newValue) -> onChangesListviewClicked(newValue));
+                .addListener((observable, oldValue, newValue) -> onDiffListviewClicked(newValue.getText()));
 
         historyListView
                 .getSelectionModel()
@@ -103,6 +107,18 @@ public class HelloController implements Initializable {
                 .getSelectionModel()
                 .selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> onCommitChangesClicked((String) newValue));
+
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("tools-menu.fxml"));
+        try {
+            loader.load();
+            ToolsMenuController toolsMenuController = loader.getController();
+
+            // Выполните необходимые действия с контроллером включаемого ресурса
+            // ...
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private ObservableList<String> loadChangesToListView(Git git, ObjectId oldCommit, ObjectId newCommit, String fileName) throws IOException, GitAPIException {
@@ -175,7 +191,7 @@ public class HelloController implements Initializable {
 
     public void updateScreen() throws GitAPIException, IOException {
         if(git != null){
-            loadChangesList();
+            loadDiffList();
             loadCommitHistory();
         }
 
@@ -183,6 +199,7 @@ public class HelloController implements Initializable {
 
     public void setGit(Git git) throws IOException {
         this.git = git;
+        toolsMenuController.setGit(git);
     }
 
     private void loadChangesToListView(List<String> diffList, ListView dstListView) throws IOException {
@@ -219,8 +236,8 @@ public class HelloController implements Initializable {
         });
     }
 
-    private void loadChangesList() {
-        changesListView.getItems().clear();
+    private void loadDiffList() {
+        diffListView.getItems().clear();
 
         StatusCommand statusCommand = git.status();
         Status status = null;
@@ -230,7 +247,7 @@ public class HelloController implements Initializable {
                 CheckBox checkBox = new CheckBox();
                 checkBox.setSelected(true);
                 checkBox.setText(changedFile);
-                changesListView.getItems().add(checkBox);
+                diffListView.getItems().add(new CheckBox(changedFile));
             }
         } catch (GitAPIException e) {
             e.printStackTrace();
@@ -241,7 +258,6 @@ public class HelloController implements Initializable {
 
     private void fillCommitChangesList(List<String> changes)  {
         commitChangesListView.getItems().clear();
-
         // Добавляем измененные файлы в список изменений
         for (String changedFile : changes) {
             commitChangesListView.getItems().add(changedFile);
@@ -268,14 +284,14 @@ public class HelloController implements Initializable {
         }
     }
 
-    private void onChangesListviewClicked(CheckBox newCheckboxValue){
-        String newValue = newCheckboxValue.getText();
+    private void onDiffListviewClicked(String newValue){
         // При выборе элемента changesListView
         if (newValue != null) {
             commitChangesListView.setVisible(false);
             contentSplitPane.setDividerPositions(0);
             try {
-                JgitApi.getCurrentDiffs(git, newValue);
+                 loadChangesToListView(JgitApi.getCurrentDiffs(git, newValue), fileListView);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -309,7 +325,8 @@ public class HelloController implements Initializable {
     private void onCommitChangesClicked(String newValue){
         String selectedCommit = historyListView
                                     .getSelectionModel()
-                                    .getSelectedItem();
+                                    .getSelectedItem()
+                                    .replace("\n", "");
         String selectedFile = ((String) commitChangesListView
                                             .getSelectionModel()
                                             .getSelectedItem())
@@ -335,9 +352,10 @@ public class HelloController implements Initializable {
             git.commit().setMessage("Commit message").call();
 
             // Обновляем списки изменений и истории коммитов
-            loadChangesList();
-            loadCommitHistory();
+            updateScreen();
         } catch (GitAPIException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -349,9 +367,9 @@ public class HelloController implements Initializable {
             git.pull().call();
 
             // Обновляем списки изменений и истории коммитов
-            loadChangesList();
-            loadCommitHistory();
-        } catch (GitAPIException e) {
+            updateScreen();
+
+        } catch (GitAPIException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -371,4 +389,19 @@ public class HelloController implements Initializable {
         // Обработка события нажатия на кнопку Settings
     }
 
+    public void commitButtonClicked(ActionEvent actionEvent) throws Exception {
+        if(!commitMessageTextField.getText().isEmpty()){
+            addSelectedFilesToCommit();
+            JgitApi.commit(git, commitMessageTextField.getText());
+        }
+    }
+
+    public void addSelectedFilesToCommit() throws Exception {
+        for (CheckBox checkBox : diffListView.getItems()) {
+            if (checkBox.isSelected()) {
+                String filePath = checkBox.getText(); // Предполагается, что текст CheckBox содержит путь к файлу
+                JgitApi.addFile(git, filePath);
+            }
+        }
+    }
 }

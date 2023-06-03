@@ -39,6 +39,7 @@ public class DBRepository implements ModelDAO<Repository> {
         }
         return instance;
     }
+
     @Override
     public List<Repository> getAll() {
         List<Repository> repositories = new ArrayList<>();

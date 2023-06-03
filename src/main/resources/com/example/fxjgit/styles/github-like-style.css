@@ -43,6 +43,18 @@ Button:hover {
     -fx-padding: 0;
 }
 
+#commitButton{
+    -fx-background-color: #3399ff;
+    -fx-border-color: #3399ff;
+    -fx-text-fill: black;
+    -fx-padding: 3px 6px 3px 6px;
+}
+
+#commitButton:hover{
+    -fx-background-color: #55bbff;
+    -fx-border-color: #55bbff;
+}
+
 /* Применение стилей к TextField */
 TextField {
     -fx-padding: 5px;

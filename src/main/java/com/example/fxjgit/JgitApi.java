@@ -135,6 +135,48 @@ public class JgitApi {
         return affectedFiles;
     }
 
+    public static List<String> getCurrentDiffs(Git git, String filename) throws IOException {
+        Repository repository = git.getRepository();
+        // Get the latest commit
+        RevCommit commit = getLatestCommit(repository);
+
+        // Get the file content from the latest commit
+        String lastCommitContent = getFileContentFromCommit(repository, commit, filename);
+
+        // Get the current file content
+        Path currentPath = Paths.get(git.getRepository().getDirectory() + "\\..\\", filename);
+        String currentContent = new String(Files.readAllBytes(currentPath));
+
+        // Compare the contents and generate the diff
+        List<String> diffList = generateDiff(lastCommitContent, currentContent);
+
+        return diffList;
+    }
+
+    public static String getFileContentFromCommit(Repository repository, RevCommit commit, String fileName) throws IOException {
+        try (TreeWalk treeWalk = new TreeWalk(repository)) {
+            treeWalk.addTree(commit.getTree());
+            treeWalk.setRecursive(true);
+            treeWalk.setFilter(PathFilter.create(fileName));
+
+            if (treeWalk.next()) {
+                ObjectId objectId = treeWalk.getObjectId(0);
+                try (org.eclipse.jgit.lib.ObjectReader reader = repository.newObjectReader()) {
+                    return new String(reader.open(objectId).getBytes());
+                }
+            }
+        }
+
+        return "";
+    }
+
+    public static RevCommit getLatestCommit(Repository repository) throws IOException {
+        try (RevWalk walk = new RevWalk(repository)) {
+            RevCommit commit = walk.parseCommit(repository.resolve("HEAD"));
+            return commit;
+        }
+    }
+
     public static RevCommit findCommitByMessage(Git git, String commitMessage) throws IOException {
         Repository repository = git.getRepository();
 
@@ -153,24 +195,6 @@ public class JgitApi {
         }
 
         return null;
-    }
-
-    public static List<String> getCurrentDiffs(Git git, String filename) throws IOException {
-        Repository repository = git.getRepository();
-        // Get the latest commit
-        RevCommit commit = getLatestCommit(repository);
-
-        // Get the file content from the latest commit
-        String lastCommitContent = getFileContentFromCommit(repository, commit, filename);
-
-        // Get the current file content
-        Path currentPath = Paths.get(git.getRepository().getDirectory() + "\\..\\", filename);
-        String currentContent = new String(Files.readAllBytes(currentPath));
-
-        // Compare the contents and generate the diff
-        List<String> diffList = generateDiff(lastCommitContent, currentContent);
-
-        return diffList;
     }
 
     public static List<String> generateDiff(String oldContent, String newContent) {
@@ -202,28 +226,9 @@ public class JgitApi {
         return diffList;
     }
 
-    public static String getFileContentFromCommit(Repository repository, RevCommit commit, String fileName) throws IOException {
-        try (TreeWalk treeWalk = new TreeWalk(repository)) {
-            treeWalk.addTree(commit.getTree());
-            treeWalk.setRecursive(true);
-            treeWalk.setFilter(PathFilter.create(fileName));
-
-            if (treeWalk.next()) {
-                ObjectId objectId = treeWalk.getObjectId(0);
-                try (org.eclipse.jgit.lib.ObjectReader reader = repository.newObjectReader()) {
-                    return new String(reader.open(objectId).getBytes());
-                }
-            }
-        }
-
-        return "";
+    public static void commit(Git git, String commitMessage) throws GitAPIException {
+        CommitCommand commitCommand = git.commit();
+        commitCommand.setMessage(commitMessage);
+        commitCommand.call();
     }
-
-    public static RevCommit getLatestCommit(Repository repository) throws IOException {
-        try (RevWalk walk = new RevWalk(repository)) {
-            RevCommit commit = walk.parseCommit(repository.resolve("HEAD"));
-            return commit;
-        }
-    }
-
 }

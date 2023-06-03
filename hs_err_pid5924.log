@@ -16,7 +16,7 @@
 
 ---------------  S U M M A R Y ------------
 
-Command Line: -agentlib:jdwp=transport=dt_socket,address=127.0.0.1:54173,suspend=y,server=n -Dfile.encoding=UTF-8 --module-path=C:\Users\Valodya\Desktop\jgit-gui\target\classes;C:\Users\Valodya\.m2\repository\org\openjfx\javafx-fxml\11.0.2\javafx-fxml-11.0.2-win.jar;C:\Users\Valodya\.m2\repository\org\eclipse\jgit\org.eclipse.jgit\6.5.0.202303070854-r\org.eclipse.jgit-6.5.0.202303070854-r.jar;C:\Users\Valodya\.m2\repository\org\openjfx\javafx-graphics\11.0.2\javafx-graphics-11.0.2-win.jar;C:\Users\Valodya\.m2\repository\org\openjfx\javafx-controls\11.0.2\javafx-controls-11.0.2-win.jar;C:\Users\Valodya\.m2\repository\org\openjfx\javafx-base\11.0.2\javafx-base-11.0.2-win.jar -Djdk.module.main=com.example.fxjgit com.example.fxjgit/com.example.fxjgit.HelloApplication
+Command Line: -agentlib:jdwp=transport=dt_socket,address=127.0.0.1:54173,suspend=y,server=n -Dfile.encoding=UTF-8 --module-path=C:\Users\Valodya\Desktop\jgit-gui\target\classes;C:\Users\Valodya\.m2\repository\org\openjfx\javafx-fxml\11.0.2\javafx-fxml-11.0.2-win.jar;C:\Users\Valodya\.m2\repository\org\eclipse\jgit\org.eclipse.jgit\6.5.0.202303070854-r\org.eclipse.jgit-6.5.0.202303070854-r.jar;C:\Users\Valodya\.m2\repository\org\openjfx\javafx-graphics\11.0.2\javafx-graphics-11.0.2-win.jar;C:\Users\Valodya\.m2\repository\org\openjfx\javafx-controls\11.0.2\javafx-controls-11.0.2-win.jar;C:\Users\Valodya\.m2\repository\org\openjfx\javafx-base\11.0.2\javafx-base-11.0.2-win.jar -Djdk.module.main=com.example.fxjgit com.example.fxjgit/com.example.fxjgit.MainApplication
 
 Host: Intel(R) Core(TM) i7-6500U CPU @ 2.50GHz, 4 cores, 7G,  Windows 10 , 64 bit Build 19041 (10.0.19041.2913)
 Time: Mon May 22 17:59:58 2023 RTZ 2 (s 10 , 64 bit Build 19041 (10.0.19041.2913) elapsed time: 84.070199 seconds (0d 0h 1m 24s)
@@ -759,7 +759,7 @@ symbol engine: initialized successfully - sym options: 0x614 - pdb path: .;C:\Us
 
 VM Arguments:
 jvm_args: -agentlib:jdwp=transport=dt_socket,address=127.0.0.1:54173,suspend=y,server=n -Dfile.encoding=UTF-8 --module-path=C:\Users\Valodya\Desktop\jgit-gui\target\classes;C:\Users\Valodya\.m2\repository\org\openjfx\javafx-fxml\11.0.2\javafx-fxml-11.0.2-win.jar;C:\Users\Valodya\.m2\repository\org\eclipse\jgit\org.eclipse.jgit\6.5.0.202303070854-r\org.eclipse.jgit-6.5.0.202303070854-r.jar;C:\Users\Valodya\.m2\repository\org\openjfx\javafx-graphics\11.0.2\javafx-graphics-11.0.2-win.jar;C:\Users\Valodya\.m2\repository\org\openjfx\javafx-controls\11.0.2\javafx-controls-11.0.2-win.jar;C:\Users\Valodya\.m2\repository\org\openjfx\javafx-base\11.0.2\javafx-base-11.0.2-win.jar -Djdk.module.main=com.example.fxjgit 
-java_command: com.example.fxjgit/com.example.fxjgit.HelloApplication
+java_command: com.example.fxjgit/com.example.fxjgit.MainApplication
 java_class_path (initial): C:\Users\Valodya\.m2\repository\org\openjfx\javafx-controls\11.0.2\javafx-controls-11.0.2.jar;C:\Users\Valodya\.m2\repository\org\openjfx\javafx-graphics\11.0.2\javafx-graphics-11.0.2.jar;C:\Users\Valodya\.m2\repository\org\openjfx\javafx-base\11.0.2\javafx-base-11.0.2.jar;C:\Users\Valodya\.m2\repository\org\openjfx\javafx-fxml\11.0.2\javafx-fxml-11.0.2.jar;C:\Users\Valodya\.m2\repository\com\googlecode\javaewah\JavaEWAH\1.1.13\JavaEWAH-1.1.13.jar;C:\Users\Valodya\.m2\repository\org\slf4j\slf4j-api\1.7.30\slf4j-api-1.7.30.jar;C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2021.3.2\lib\idea_rt.jar
 Launcher Type: SUN_STANDARD
 

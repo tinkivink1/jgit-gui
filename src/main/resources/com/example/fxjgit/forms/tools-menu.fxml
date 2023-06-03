@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="Menu" minHeight="25" stylesheets="@../styles/menu-style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fxjgit.forms.ToolsMenuController">
+    <MenuBar>
+        <menus>
+            <Menu text="File">
+                <MenuItem text="New Repository" fx:id="newRepoButton" onAction="#newRepoClicked"/>
+                <MenuItem text="Clone Repository" fx:id="cloneRepoButton" onAction="#cloneClicked"/>
+                <MenuItem text="Open Repository" fx:id="openRepoButton" onAction="#openClicked"/>
+                <MenuItem text="Exit" fx:id="exitButton"/>
+            </Menu>
+            <Menu text="Edit">
+                <MenuItem text="Undo" fx:id="undoButton"/>
+                <MenuItem text="Redo" fx:id="redoButton"/>
+                <MenuItem text="Cut" fx:id="cutButton"/>
+                <MenuItem text="Copy" fx:id="copyButton"/>
+                <MenuItem text="Paste" fx:id="pasteButton"/>
+            </Menu>
+            <Menu text="View">
+                <MenuItem text="Toolbar" />
+                <MenuItem text="Sidebar" />
+            </Menu>
+            <Menu text="Repository">
+                <MenuItem text="Push" fx:id="pushButton" onAction="#pushClicked"/>
+                <MenuItem text="Pull" fx:id="pullButton" onAction="#pullClicked"/>
+                <MenuItem text="Fetch" fx:id="fetchButton" onAction="#fetchClicked"/>
+                <MenuItem text="Remove" fx:id="removeButton" onAction="#removeClicked"/>
+            </Menu>
+            <Menu text="Branch">
+                <MenuItem text="New branch" fx:id="newBranchButton" onAction="#newBranchClicked"/>
+                <MenuItem text="Rename" fx:id="renameButton" onAction="#branchClicked"/>
+                <MenuItem text="Delete" fx:id="deleteButton" onAction="#deleteClicked"/>
+                <MenuItem text="Discard all changes" fx:id="discardButton" onAction="#discardClicked"/>
+                <MenuItem text="Stash all changes" fx:id="stashButton" onAction="#stashClicked"/>
+            </Menu>
+
+            <Menu text="Help">
+                <MenuItem text="About" />
+            </Menu>
+        </menus>
+    </MenuBar>
+</AnchorPane>
