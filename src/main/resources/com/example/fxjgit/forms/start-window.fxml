@@ -5,7 +5,7 @@
 
 <BorderPane prefHeight="720" prefWidth="1080" stylesheets="@../styles/github-like-style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fxjgit.forms.StartWindowController">
     <top>
-        <HBox fx:id="menuHbox">
+        <HBox fx:id="menuHbox" disable="true">
 <!--            <fx:include source="tools-menu.fxml" prefWidth="Infinity"/>-->
         </HBox>
     </top>
@@ -19,7 +19,7 @@
                     <Button fx:id="cloneButton" onMouseClicked="#onCloneButtonClicked" maxWidth="Infinity" text="Clone repository" HBox.hgrow="ALWAYS" />
                     <Button fx:id="addExistingButton" onMouseClicked="#onExistingButtonClicked" maxWidth="Infinity" text="Add existing repository" HBox.hgrow="ALWAYS" />
                     <Region VBox.vgrow="ALWAYS" />
-                    <Button maxWidth="Infinity" text="Добавил для красотыыыыыы" HBox.hgrow="ALWAYS" />
+<!--                    <Button maxWidth="Infinity" text="Update" HBox.hgrow="ALWAYS" />-->
                 </VBox>
                 <VBox  HBox.hgrow="ALWAYS" alignment="TOP_LEFT" spacing="15">
                     <HBox alignment="CENTER_LEFT" spacing="10">

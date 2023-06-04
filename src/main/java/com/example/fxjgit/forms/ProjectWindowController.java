@@ -121,65 +121,6 @@ public class ProjectWindowController implements Initializable {
         }
     }
 
-    private ObservableList<String> loadChangesToListView(Git git, ObjectId oldCommit, ObjectId newCommit, String fileName) throws IOException, GitAPIException {
-        CanonicalTreeParser newTreeParser = new CanonicalTreeParser();
-        try (var reader = git.getRepository().newObjectReader()) {
-            var head = newCommit;
-            newTreeParser.reset(reader, head);
-        }
-
-        // Get the previous commit
-        Iterable<RevCommit> commits = git.log().setMaxCount(1).call();
-        RevCommit commit = commits.iterator().next();
-
-        // Get the previous file tree
-        CanonicalTreeParser oldTreeParser = new CanonicalTreeParser();
-        try (var reader = git.getRepository().newObjectReader()) {
-            var oldHead = oldCommit;
-            oldTreeParser.reset(reader, oldHead);
-        }
-
-        // Perform diff between the two file trees
-        List<DiffEntry> diffs = git.diff()
-                .setNewTree(newTreeParser)
-                .setOldTree(oldTreeParser)
-                .call();
-
-        // Create an ObservableList to store the changes
-        ObservableList<String> changes = FXCollections.observableArrayList();
-
-        // Generate diff for the specified file
-        for (DiffEntry diff : diffs) {
-            if (diff.getNewPath().equals(fileName)) {
-                // Create a formatter for generating the diff text
-                try (var reader = git.getRepository().newObjectReader()) {
-                    var oldObjectId = diff.getOldId().toObjectId();
-                    var newObjectId = diff.getNewId().toObjectId();
-                    var oldText = new RawText(reader.open(oldObjectId).getBytes());
-                    var newText = new RawText(reader.open(newObjectId).getBytes());
-                    var diffFormatter = new DiffFormatter(System.out);
-                    var edits = diffFormatter.toFileHeader(diff).toEditList();
-
-                    // Generate the diff text for the specified file
-                    StringBuilder diffTextBuilder = new StringBuilder();
-                    for (Edit edit : edits) {
-                        for (int i = edit.getBeginA(); i < edit.getEndA(); i++) {
-                            diffTextBuilder.append(oldText.getString(i)).append("\n");
-                        }
-                        for (int i = edit.getBeginB(); i < edit.getEndB(); i++) {
-                            diffTextBuilder.append(newText.getString(i)).append("\n");
-                        }
-                    }
-
-                    // Add the diff text to the changes list
-                    changes.add(diffTextBuilder.toString());
-                }
-            }
-        }
-
-        // Set the changes list to the ListView
-        return changes;
-    }
 
     public User getUser() {
         return user;

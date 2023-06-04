@@ -6,23 +6,26 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+
+ Класс RepositoryDAO предоставляет доступ к операциям сущности "репозиторий" в базе данных.
+ */
 public class RepositoryDAO implements ModelDAO<Repository> {
     private Connection connection;
 
+    /**
 
-    private RepositoryDAO(String dbUrl, String dbUser, String dbPassword) {
-        connection = ConnectionDB.connect(dbUrl, dbUser, dbPassword);
-    }
-
-    private RepositoryDAO(String dbUrl) {
-        connection = ConnectionDB.connect(dbUrl);
-    }
-
+     Конструктор класса RepositoryDAO.
+     @param connection объект Connection, представляющий установленное соединение с базой данных
+     */
     public RepositoryDAO(Connection connection) {
         this.connection = connection;
     }
+    /**
 
-
+     Метод getAll() возвращает список всех репозиториев из базы данных.
+     @return список объектов Repository, содержащий все репозитории из базы данных
+     */
     @Override
     public List<Repository> getAll() {
         List<Repository> repositories = new ArrayList<>();
@@ -42,7 +45,12 @@ public class RepositoryDAO implements ModelDAO<Repository> {
         }
         return repositories;
     }
+    /**
 
+     Метод getRepositoriesByUserId() возвращает список репозиториев, принадлежащих указанному пользователю.
+     @param userId идентификатор пользователя
+     @return список объектов Repository, содержащий репозитории, принадлежащие указанному пользователю
+     */
     public List<Repository> getRepositoriesByUserId(int userId) {
         List<Repository> repositories = new ArrayList<>();
         try {
@@ -61,7 +69,12 @@ public class RepositoryDAO implements ModelDAO<Repository> {
         }
         return repositories;
     }
+    /**
 
+     Метод getById() возвращает репозиторий с указанным идентификатором.
+     @param repositoryId идентификатор репозитория
+     @return объект Repository, представляющий репозиторий с указанным идентификатором
+     */
     @Override
     public Repository getById(int repositoryId) {
         Repository repository = null;
@@ -80,7 +93,12 @@ public class RepositoryDAO implements ModelDAO<Repository> {
         }
         return repository;
     }
+    /**
 
+     Метод getByPath() возвращает репозиторий с указанным путем.
+     @param localPath локальный путь репозитория
+     @return объект Repository, представляющий репозиторий с указанным путем
+     */
     public Repository getByPath(String localPath) {
         Repository repository = null;
         try {
@@ -98,10 +116,15 @@ public class RepositoryDAO implements ModelDAO<Repository> {
         }
         return repository;
     }
+    /**
 
+     Метод add() добавляет новый репозиторий в базу данных.
+     @param repository объект Repository, представляющий репозиторий для добавления
+     @return true, если репозиторий успешно добавлен, false в противном случае
+     */
     @Override
     public boolean add(Repository repository) {
-        if(!getRepositoriesByUserId(repository.getUserId()).stream().anyMatch(el -> el.getLocalPath() == repository.getLocalPath()))
+        if (!getRepositoriesByUserId(repository.getUserId()).stream().anyMatch(el -> el.getLocalPath().equals(repository.getLocalPath()))) {
             try {
                 PreparedStatement statement = connection.prepareStatement("INSERT INTO Repositories (UserId, RemoteLink, LocalPath) VALUES (?, ?, ?)");
                 statement.setInt(1, repository.getUserId());
@@ -112,9 +135,15 @@ public class RepositoryDAO implements ModelDAO<Repository> {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
         return false;
     }
+    /**
 
+     Метод update() обновляет информацию о репозитории в базе данных.
+     @param repository объект Repository, представляющий репозиторий для обновления
+     @return true, если информация о репозитории успешно обновлена, false в противном случае
+     */
     @Override
     public boolean update(Repository repository) {
         try {
@@ -130,7 +159,12 @@ public class RepositoryDAO implements ModelDAO<Repository> {
         }
         return false;
     }
+    /**
 
+     Метод delete() удаляет репозиторий с указанным идентификатором из базы данных.
+     @param repositoryId идентификатор репозитория для удаления
+     @return true, если репозиторий успешно удален, false в противном случае
+     */
     @Override
     public boolean delete(int repositoryId) {
         try {
@@ -143,6 +177,4 @@ public class RepositoryDAO implements ModelDAO<Repository> {
         }
         return false;
     }
-
-
 }

@@ -11,6 +11,14 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class MainApplication extends Application {
+
+    /**
+     The start() method is called when the JavaFX application is started.
+     It sets up the database connection, loads the FXML file, creates a scene,
+     and displays the stage.
+     @param stage the primary stage for the application
+     @throws IOException if an I/O exception occurs during the loading of the FXML file
+     */
     @Override
     public void start(Stage stage) throws IOException {
         String DB_URL = "jdbc:postgresql://localhost:5432/gituserdb";
@@ -27,6 +35,11 @@ public class MainApplication extends Application {
         stage.show();
     }
 
+    /**
+     The main() method is the entry point for the Java application.
+     It launches the JavaFX application by calling the launch() method.
+     @param args the command line arguments
+     */
     public static void main(String[] args) {
         launch();
     }

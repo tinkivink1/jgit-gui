@@ -11,7 +11,7 @@
 <?import javafx.scene.control.PasswordField?>
 <BorderPane fx:id="rootNode" prefHeight="720" prefWidth="1080" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/16" fx:controller="com.example.fxjgit.forms.enter.RegistrationController" stylesheets="/com/example/fxjgit/styles/github-like-style.css">
     <top>
-        <HBox fx:id="menuHbox">
+        <HBox fx:id="menuHbox"  disable="true">
             <!--            <fx:include source="tools-menu.fxml" fx:id="toolsMenu"/>-->
         </HBox>
     </top>
@@ -22,16 +22,16 @@
                   alignment="CENTER">
 
                 <VBox spacing="5">
-                    <Label text="Логин"/>
+                    <Label text="Login"/>
                     <TextField fx:id="usernameField"/>
                 </VBox>
 
                 <VBox spacing="5">
-                    <Label text="Пароль"/>
+                    <Label text="Password"/>
                     <PasswordField fx:id="passwordField"/>
                 </VBox>
 
-                <Button text="Зарегистрироваться" onAction="#registerButtonClicked" fx:id="registerButton"/>
+                <Button text="Sign up" onAction="#registerButtonClicked" fx:id="registerButton"/>
             </VBox>
         </HBox>
     </center>

@@ -10,18 +10,20 @@ import java.util.List;
 public class UserDAO implements ModelDAO<User> {
     private Connection connection;
 
-    private UserDAO(String dbUrl, String dbUser, String dbPassword) {
-        connection = ConnectionDB.connect(dbUrl, dbUser, dbPassword);
-    }
+    /**
 
-    private UserDAO(String dbUrl) {
-        connection = ConnectionDB.connect(dbUrl);
-    }
-
+     Конструктор класса UserDAO.
+     @param connection объект Connection, представляющий установленное соединение с базой данных
+     */
     public UserDAO(Connection connection){
         this.connection = connection;
     }
 
+    /**
+
+     Метод getAll() возвращает список всех пользователей из базы данных.
+     @return список объектов User, содержащий всех пользователей из базы данных
+     */
     @Override
     public List<User> getAll() {
         List<User> users = new ArrayList<>();
@@ -42,6 +44,12 @@ public class UserDAO implements ModelDAO<User> {
         return users;
     }
 
+    /**
+
+     Метод getById() возвращает пользователя с указанным идентификатором.
+     @param id идентификатор пользователя
+     @return объект User, представляющий пользователя с указанным идентификатором
+     */
     @Override
     public User getById(int id) {
         User user = null;
@@ -64,6 +72,12 @@ public class UserDAO implements ModelDAO<User> {
         return user;
     }
 
+    /**
+
+     Метод getByUsername() возвращает пользователя с указанным именем пользователя.
+     @param usernameToFind имя пользователя
+     @return объект User, представляющий пользователя с указанным именем пользователя
+     */
     public User getByUsername(String usernameToFind) {
         User user = null;
         try {
@@ -86,6 +100,14 @@ public class UserDAO implements ModelDAO<User> {
         return user;
     }
 
+    /**
+
+     Метод add() добавляет нового пользователя в базу данных.
+
+     @param user объект User, представляющий пользователя для добавления
+
+     @return true, если пользователь успешно добавлен, false в противном случае
+     */
     @Override
     public boolean add(User user) {
         if (getByUsername(user.getUsername()) == null) {
@@ -119,6 +141,14 @@ public class UserDAO implements ModelDAO<User> {
         return false;
     }
 
+    /**
+
+     Метод update() обновляет информацию о пользователе в базе данных.
+
+     @param user объект User, представляющий пользователя для обновления
+
+     @return true, если информация о пользователе успешно обновлена, false в противном случае
+     */
     @Override
     public boolean update(User user) {
         User existingUser = getByUsername(user.getUsername());
@@ -167,6 +197,12 @@ public class UserDAO implements ModelDAO<User> {
         return false;
     }
 
+    /**
+
+     Метод delete() удаляет пользователя с указанным идентификатором из базы данных.
+     @param id идентификатор пользователя для удаления
+     @return true, если пользователь успешно удален, false в противном случае
+     */
     @Override
     public boolean delete(int id) {
         User user = getById(id);

@@ -12,16 +12,6 @@
                 <MenuItem text="Open Repository" fx:id="openRepoButton" onAction="#openClicked"/>
                 <MenuItem text="Exit" fx:id="exitButton"/>
             </Menu>
-            <Menu text="Edit">
-                <MenuItem text="Undo" fx:id="undoButton"/>
-                <MenuItem text="Redo" fx:id="redoButton"/>
-                <MenuItem text="Cut" fx:id="cutButton"/>
-                <MenuItem text="Copy" fx:id="copyButton"/>
-                <MenuItem text="Paste" fx:id="pasteButton"/>
-            </Menu>
-            <Menu text="Repository">
-                <MenuItem text="Remove" fx:id="removeButton" onAction="#removeClicked"/>
-            </Menu>
             <Menu text="Branch">
                 <MenuItem text="New branch" fx:id="newBranchButton" onAction="#newBranchClicked"/>
                 <MenuItem text="Rename" fx:id="renameButton" onAction="#branchClicked"/>

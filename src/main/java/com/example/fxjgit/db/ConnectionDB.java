@@ -6,6 +6,14 @@ import java.sql.SQLException;
 
 public class ConnectionDB {
 
+    /**
+     Метод connect() устанавливает соединение с базой данных по указанному URL, используя указанное имя пользователя и пароль.
+     @param dbUrl URL базы данных
+     @param dbUser имя пользователя для аутентификации
+     @param dbPassword пароль для аутентификации
+     @return объект Connection, представляющий установленное соединение с базой данных
+     @throws SQLException если происходит ошибка SQL при установлении соединения
+     */
     public static Connection connect(String dbUrl, String dbUser, String dbPassword) {
         Connection connection = null;
         try {
@@ -26,6 +34,12 @@ public class ConnectionDB {
         return connection;
     }
 
+    /**
+     Метод connect() устанавливает соединение с базой данных по указанному URL.
+     @param dbUrl URL базы данных
+     @return объект Connection, представляющий установленное соединение с базой данных
+     @throws SQLException если происходит ошибка SQL при установлении соединения
+     */
     public static Connection connect(String dbUrl) {
         Connection connection = null;
         try {
