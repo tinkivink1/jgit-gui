@@ -1,44 +1,27 @@
 package com.example.fxjgit.db;
 
 import com.example.fxjgit.db.entities.Repository;
-import com.example.fxjgit.db.entities.User;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DBRepository implements ModelDAO<Repository> {
-    private static DBRepository instance;
+public class RepositoryDAO implements ModelDAO<Repository> {
     private Connection connection;
 
-    private DBRepository(String dbUrl, String dbUser, String dbPassword) {
+
+    private RepositoryDAO(String dbUrl, String dbUser, String dbPassword) {
         connection = ConnectionDB.connect(dbUrl, dbUser, dbPassword);
     }
 
-    private DBRepository(String dbUrl) {
+    private RepositoryDAO(String dbUrl) {
         connection = ConnectionDB.connect(dbUrl);
     }
 
-    public static synchronized DBRepository getInstance(String dbUrl, String dbUser, String dbPassword) {
-        if (instance == null) {
-            instance = new DBRepository(dbUrl, dbUser, dbPassword);
-        }
-        return instance;
+    public RepositoryDAO(Connection connection) {
+        this.connection = connection;
     }
 
-    public static synchronized DBRepository getInstance(String dbUrl) {
-        if (instance == null) {
-            instance = new DBRepository(dbUrl);
-        }
-        return instance;
-    }
-
-    public static synchronized DBRepository getInstance() {
-        if (instance == null) {
-            throw new NullPointerException("DB connection is not established");
-        }
-        return instance;
-    }
 
     @Override
     public List<Repository> getAll() {

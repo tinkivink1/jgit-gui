@@ -1,4 +1,4 @@
-package com.example.fxjgit.popups;
+package com.example.fxjgit.forms.popups;
 
 import com.example.fxjgit.db.entities.User;
 import org.eclipse.jgit.api.Git;

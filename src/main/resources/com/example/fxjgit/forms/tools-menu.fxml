@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane fx:id="Menu" minHeight="25" stylesheets="@../styles/menu-style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fxjgit.forms.ToolsMenuController">
-    <MenuBar>
+    <MenuBar fx:id="menuBar">
         <menus>
             <Menu text="File">
                 <MenuItem text="New Repository" fx:id="newRepoButton" onAction="#newRepoClicked"/>
@@ -19,14 +19,7 @@
                 <MenuItem text="Copy" fx:id="copyButton"/>
                 <MenuItem text="Paste" fx:id="pasteButton"/>
             </Menu>
-            <Menu text="View">
-                <MenuItem text="Toolbar" />
-                <MenuItem text="Sidebar" />
-            </Menu>
             <Menu text="Repository">
-                <MenuItem text="Push" fx:id="pushButton" onAction="#pushClicked"/>
-                <MenuItem text="Pull" fx:id="pullButton" onAction="#pullClicked"/>
-                <MenuItem text="Fetch" fx:id="fetchButton" onAction="#fetchClicked"/>
                 <MenuItem text="Remove" fx:id="removeButton" onAction="#removeClicked"/>
             </Menu>
             <Menu text="Branch">
@@ -35,11 +28,21 @@
                 <MenuItem text="Delete" fx:id="deleteButton" onAction="#deleteClicked"/>
                 <MenuItem text="Discard all changes" fx:id="discardButton" onAction="#discardClicked"/>
                 <MenuItem text="Stash all changes" fx:id="stashButton" onAction="#stashClicked"/>
+                <SeparatorMenuItem />
+                <Menu text="Switch to">
+                    <MenuItem text="Branch A" onAction="#switchToBranchA"/>
+                    <MenuItem text="Branch B" onAction="#switchToBranchB"/>
+                    <MenuItem text="Branch C" onAction="#switchToBranchC"/>
+                </Menu>
             </Menu>
 
             <Menu text="Help">
                 <MenuItem text="About" />
             </Menu>
+
+            <Menu text="↑ Push" onAction="#onPush" fx:id="pushButton"/>
+            <Menu text="↓ Pull" onAction="#onPull" fx:id="pullButton"/>
+            <Menu text="🗘 Fetch" onAction="#onFetch" fx:id="fetchButton"/>
         </menus>
     </MenuBar>
 </AnchorPane>

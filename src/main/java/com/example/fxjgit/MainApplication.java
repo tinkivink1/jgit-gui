@@ -1,7 +1,8 @@
 package com.example.fxjgit;
 
-import com.example.fxjgit.db.DBRepository;
-import com.example.fxjgit.db.DBUser;
+import com.example.fxjgit.db.DAOFactory;
+import com.example.fxjgit.db.RepositoryDAO;
+import com.example.fxjgit.db.UserDAO;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,8 +16,7 @@ public class MainApplication extends Application {
         String DB_URL = "jdbc:postgresql://localhost:5432/gituserdb";
         String DB_USER = "root";
         String DB_PASS = "root";
-        DBUser.getInstance(DB_URL, DB_USER, DB_PASS);
-        DBRepository.getInstance(DB_URL, DB_USER, DB_PASS);
+        DAOFactory.createConnection(DB_URL, DB_USER, DB_PASS);
 
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("/com/example/fxjgit/forms/enter/enter.fxml"));
 //        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("/com/example/fxjgit/forms/forms/ProjectWindowController.fxml"));

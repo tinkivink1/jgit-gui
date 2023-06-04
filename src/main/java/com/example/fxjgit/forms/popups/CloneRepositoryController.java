@@ -1,4 +1,4 @@
-package com.example.fxjgit.popups;
+package com.example.fxjgit.forms.popups;
 
 import com.example.fxjgit.JgitApi;
 import com.example.fxjgit.db.entities.User;
@@ -10,47 +10,40 @@ import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class CreateRepositoryController implements Initializable, IPopup {
-    @FXML
-    public TextField nameTextField;
-    @FXML
-    public TextField descriptionTextField;
-    @FXML
-    public TextField selectedLocationTextField;
+public class CloneRepositoryController implements Initializable, IPopup {
 
     @FXML
-    public Button createButton;
-    @FXML
-    private String title = "Create a new repository";
+    private TextField urlTextField;
 
-    private Git git;
+    @FXML
+    private TextField selectedLocationTextField;
+
+    @FXML
+    public Button cloneButton;
+
+    @FXML
+    private String title = "Clone repository";
+
+    Git git;
     User user;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-    }
 
     @FXML
-    public void initialize() {
+    private void initialize() {
         // ставим заголовок окна через костыль
-        createButton.setDisable(true);
-        Stage currentStage = (Stage)createButton.getScene().getWindow();
+        cloneButton.setDisable(true);
+        Stage currentStage = (Stage)cloneButton.getScene().getWindow();
         currentStage.setTitle(title);
 
-
         // Установка слушателя событий изменения текста
-        nameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            // Действие, которое нужно выполнить при изменении текста
-            validateInput();
-        });
-
-        descriptionTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+        urlTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             // Действие, которое нужно выполнить при изменении текста
             validateInput();
         });
@@ -60,6 +53,14 @@ public class CreateRepositoryController implements Initializable, IPopup {
             validateInput();
         });
     }
+
+    public User getUser() {
+        return user;
+    }
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @FXML
     private void onSelectLocationButtonClicked(ActionEvent event) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -76,32 +77,36 @@ public class CreateRepositoryController implements Initializable, IPopup {
         }
     }
 
-
-    public Git createNewRepository() {
-        this.git = JgitApi.initializeRepository(selectedLocationTextField.getText());
-
-        return this.git;
+    @FXML
+    private Git cloneRepository() {
+        // Обработчик нажатия кнопки "Clone"
+        String repositoryURL = urlTextField.getText();
+        String localPath = selectedLocationTextField.getText();
+        if (user != null){
+            CredentialsProvider cp = new UsernamePasswordCredentialsProvider(user.getUsername(), user.getPassword());
+            return JgitApi.cloneRepository(cp, repositoryURL, localPath);
+        }
+       return JgitApi.cloneRepository(repositoryURL, localPath);
     }
 
     @FXML
     private void validateInput() {
-        if(!nameTextField.getText().isEmpty()
-        && !descriptionTextField.getText().isEmpty()
-        && !selectedLocationTextField.getText().isEmpty()){
-            createButton.setDisable(false);
+        if(!urlTextField.getText().isEmpty()
+                && !selectedLocationTextField.getText().isEmpty()){
+            cloneButton.setDisable(false);
         }
         else{
-            createButton.setDisable(true);
+            cloneButton.setDisable(true);
         }
     }
 
     @Override
     public Git finalAction() {
-        return createNewRepository();
+        return cloneRepository();
     }
 
     @Override
-    public void setUser(User user) {
-        this.user = user;
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
     }
 }

@@ -25,12 +25,12 @@
                 <Tab text="Changes">
                     <ScrollPane fitToHeight="true" fitToWidth="true">
                         <VBox>
+                            <Button fx:id="selectAll" text="All" onAction="#allClicked" />
                             <ListView VBox.vgrow="ALWAYS" fx:id="diffListView">
                             </ListView>
                             <VBox spacing="10" alignment="CENTER">
-                                <Label text="Current commit: " alignment="TOP_LEFT"/>
                                 <TextField fx:id="commitMessageTextField" promptText="Commit message (required)" />
-                                <Button text="Commit" onAction="#commitButtonClicked" fx:id="commitButton" VBox.vgrow="ALWAYS"/>
+                                <Button text="Commit" onAction="#commitButtonClicked" fx:id="commitButton" VBox.vgrow="ALWAYS" prefWidth="Infinity"/>
                             </VBox>
                         </VBox>
                     </ScrollPane>

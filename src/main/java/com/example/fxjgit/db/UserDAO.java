@@ -7,37 +7,19 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DBUser implements ModelDAO<User> {
-    private static DBUser instance;
+public class UserDAO implements ModelDAO<User> {
     private Connection connection;
 
-    private DBUser(String dbUrl, String dbUser, String dbPassword) {
+    private UserDAO(String dbUrl, String dbUser, String dbPassword) {
         connection = ConnectionDB.connect(dbUrl, dbUser, dbPassword);
     }
 
-    private DBUser(String dbUrl) {
+    private UserDAO(String dbUrl) {
         connection = ConnectionDB.connect(dbUrl);
     }
 
-    public static synchronized DBUser getInstance(String dbUrl, String dbUser, String dbPassword) {
-        if (instance == null) {
-            instance = new DBUser(dbUrl, dbUser, dbPassword);
-        }
-        return instance;
-    }
-
-    public static synchronized DBUser getInstance(String dbUrl) {
-        if (instance == null) {
-            instance = new DBUser(dbUrl);
-        }
-        return instance;
-    }
-
-    public static synchronized DBUser getInstance() {
-        if (instance == null) {
-            throw new NullPointerException("DB connection is not established");
-        }
-        return instance;
+    public UserDAO(Connection connection){
+        this.connection = connection;
     }
 
     @Override
@@ -50,8 +32,8 @@ public class DBUser implements ModelDAO<User> {
                 int userId = resultSet.getInt("UserId");
                 String username = resultSet.getString("Username");
                 String password = resultSet.getString("Password");
-                DBRepository dbRepository = DBRepository.getInstance();
-                User user = new User(userId, username, password, dbRepository.getRepositoriesByUserId(userId));
+                RepositoryDAO repositoryDAO = DAOFactory.getRepositoryDAO();
+                User user = new User(userId, username, password, repositoryDAO.getRepositoriesByUserId(userId));
                 users.add(user);
             }
         } catch (SQLException e) {
@@ -72,7 +54,7 @@ public class DBUser implements ModelDAO<User> {
                 String password = resultSet.getString("Password");
                 user = new User(id, username, password, null);
                 // Заполняем репозитории пользователя
-                DBRepository repositoryDAO = DBRepository.getInstance();
+                RepositoryDAO repositoryDAO = DAOFactory.getRepositoryDAO();
                 List<Repository> repositories = repositoryDAO.getRepositoriesByUserId(id);
                 user.setRepositories(repositories);
             }
@@ -94,7 +76,7 @@ public class DBUser implements ModelDAO<User> {
                 String password = resultSet.getString("password");
                 user = new User(id, username, password, null);
                 // Заполняем репозитории пользователя
-                DBRepository repositoryDAO = DBRepository.getInstance();
+                RepositoryDAO repositoryDAO = DAOFactory.getRepositoryDAO();
                 List<Repository> repositories = repositoryDAO.getRepositoriesByUserId(id);
                 user.setRepositories(repositories);
             }
@@ -121,7 +103,7 @@ public class DBUser implements ModelDAO<User> {
                     // Записываем репозитории пользователя в базу данных
                     List<Repository> repositories = user.getRepositories();
                     if (repositories != null) {
-                        DBRepository repositoryDAO = DBRepository.getInstance();
+                        RepositoryDAO repositoryDAO = DAOFactory.getRepositoryDAO();
                         for (Repository repository : repositories) {
                             repository.setUserId(userId);
                             repositoryDAO.add(repository);
@@ -149,7 +131,7 @@ public class DBUser implements ModelDAO<User> {
                 statement.executeUpdate();
 
                 // Получаем список репозиториев пользователя из базы данных
-                DBRepository repositoryDAO = DBRepository.getInstance();
+                RepositoryDAO repositoryDAO = DAOFactory.getRepositoryDAO();
                 List<Repository> existingRepositories = repositoryDAO.getRepositoriesByUserId(user.getUserId());
 
                 // Получаем новый список репозиториев пользователя
@@ -191,7 +173,7 @@ public class DBUser implements ModelDAO<User> {
         if (user != null) {
             try {
                 // Получаем список репозиториев пользователя из базы данных
-                DBRepository repositoryDAO = DBRepository.getInstance();
+                RepositoryDAO repositoryDAO = DAOFactory.getRepositoryDAO();
                 List<Repository> repositories = repositoryDAO.getRepositoriesByUserId(id);
 
                 // Удаляем все репозитории пользователя из базы данных

@@ -1,4 +1,4 @@
-package com.example.fxjgit.popups;
+package com.example.fxjgit.forms.popups;
 
 import com.example.fxjgit.JgitApi;
 import com.example.fxjgit.db.entities.User;

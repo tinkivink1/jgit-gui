@@ -44,17 +44,22 @@ Button:hover {
 }
 
 #commitButton{
-    -fx-background-color: #3399ff;
-    -fx-border-color: #3399ff;
+    -fx-background-color: #0366d6;
+    -fx-border-color: #0366d6;
     -fx-text-fill: black;
     -fx-padding: 3px 6px 3px 6px;
 }
 
 #commitButton:hover{
-    -fx-background-color: #55bbff;
-    -fx-border-color: #55bbff;
+    -fx-background-color: #0699d9;
+    -fx-border-color: #0699d9;
 }
 
+#selectAll{
+    -fx-padding: 3 6 3 6;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
 /* Применение стилей к TextField */
 TextField {
     -fx-padding: 5px;

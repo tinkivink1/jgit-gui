@@ -1,15 +1,15 @@
 package com.example.fxjgit.forms;
 
 import com.example.fxjgit.JgitApi;
-import com.example.fxjgit.db.DBRepository;
-import com.example.fxjgit.db.DBUser;
+import com.example.fxjgit.db.DAOFactory;
+import com.example.fxjgit.db.RepositoryDAO;
+import com.example.fxjgit.db.UserDAO;
 import com.example.fxjgit.db.entities.Repository;
 import com.example.fxjgit.db.entities.User;
-import com.example.fxjgit.forms.ProjectWindowController;
-import com.example.fxjgit.popups.CloneRepositoryController;
-import com.example.fxjgit.popups.CreateRepositoryController;
-import com.example.fxjgit.popups.ExistingRepositoryController;
-import com.example.fxjgit.popups.IPopup;
+import com.example.fxjgit.forms.popups.CloneRepositoryController;
+import com.example.fxjgit.forms.popups.CreateRepositoryController;
+import com.example.fxjgit.forms.popups.ExistingRepositoryController;
+import com.example.fxjgit.forms.popups.IPopup;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -93,8 +93,8 @@ public class StartWindowController {
     private void setRepositoriesInInterface() {
         repositoriesList.getItems().clear();
 
-        DBRepository dbRepository = DBRepository.getInstance();
-        List<Repository> userRepositories = dbRepository.getRepositoriesByUserId(user.getUserId());
+        RepositoryDAO repositoryDAO = DAOFactory.getRepositoryDAO();
+        List<Repository> userRepositories = repositoryDAO.getRepositoriesByUserId(user.getUserId());
         for (Repository repository : userRepositories) {
             repositoriesList.getItems().add(repository.getLocalPath());
         }
@@ -111,13 +111,13 @@ public class StartWindowController {
             nextScene(resultGit.get());
         }
 
-        DBUser dbUser = DBUser.getInstance();
+        UserDAO userDAO = DAOFactory.getUserDAO();
         user.getRepositories().add(new Repository(user.getUserId(), resultGit
                                                                         .get()
                                                                         .getRepository()
                                                                         .getDirectory()
                                                                         .getAbsolutePath()));
-        dbUser.update(user);
+        userDAO.update(user);
     }
 
     public void onCloneButtonClicked(MouseEvent event) throws IOException, GitAPIException {
@@ -130,7 +130,7 @@ public class StartWindowController {
         if (resultGit.get() != null){
             nextScene(resultGit.get());
 
-            DBUser dbUser = DBUser.getInstance();
+            UserDAO userDAO = DAOFactory.getUserDAO();
             Iterable<RemoteConfig> remoteConfigs = resultGit.get().remoteList().call();
             // Перебрать все удаленные репозитории и получить ссылку на нужный
             String remoteName = "origin";
@@ -147,7 +147,7 @@ public class StartWindowController {
                                                                                     .getRepository()
                                                                                     .getDirectory()
                                                                                     .getAbsolutePath()));
-            dbUser.update(user);
+            userDAO.update(user);
         }
     }
 
@@ -161,7 +161,7 @@ public class StartWindowController {
         if (resultGit.get() != null){
             nextScene(resultGit.get());
 
-            DBUser dbUser = DBUser.getInstance();
+            UserDAO userDAO = DAOFactory.getUserDAO();
             Iterable<RemoteConfig> remoteConfigs = resultGit.get().remoteList().call();
             // Перебрать все удаленные репозитории и получить ссылку на нужный
             String remoteName = "origin";
@@ -178,7 +178,7 @@ public class StartWindowController {
                     .getRepository()
                     .getDirectory()
                     .getAbsolutePath()));
-            dbUser.update(user);
+            userDAO.update(user);
         }
     }
 

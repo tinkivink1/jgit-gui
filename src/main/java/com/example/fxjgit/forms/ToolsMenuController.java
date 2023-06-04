@@ -2,6 +2,10 @@ package com.example.fxjgit.forms;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.geometry.NodeOrientation;
+import javafx.geometry.Pos;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import org.eclipse.jgit.api.Git;
@@ -23,6 +27,7 @@ public class ToolsMenuController implements Initializable {
     public MenuItem deleteButton;
     public MenuItem discardButton;
     public MenuItem stashButton;
+    public MenuBar menuBar;
 
     Git git;
     @Override
@@ -31,43 +36,80 @@ public class ToolsMenuController implements Initializable {
     }
 
 
+
     public void setGit(Git git) {
         this.git = git;
     }
 
     public void newRepoClicked(ActionEvent actionEvent) {
+
     }
 
     public void cloneClicked(ActionEvent actionEvent) {
+
     }
 
     public void openClicked(ActionEvent actionEvent) {
+
     }
 
     public void pushClicked(ActionEvent actionEvent) {
+
     }
 
     public void pullClicked(ActionEvent actionEvent) {
+
     }
 
     public void fetchClicked(ActionEvent actionEvent) {
+
     }
 
     public void removeClicked(ActionEvent actionEvent) {
+
     }
 
     public void newBranchClicked(ActionEvent actionEvent) {
+
     }
 
     public void branchClicked(ActionEvent actionEvent) {
+
     }
 
     public void deleteClicked(ActionEvent actionEvent) {
+
     }
 
     public void discardClicked(ActionEvent actionEvent) {
+
     }
 
     public void stashClicked(ActionEvent actionEvent) {
+
+    }
+
+    public void switchToBranchA(ActionEvent actionEvent) {
+
+    }
+
+    public void switchToBranchB(ActionEvent actionEvent) {
+
+    }
+
+    public void switchToBranchC(ActionEvent actionEvent) {
+
+    }
+
+    public void onPush(ActionEvent actionEvent) {
+
+    }
+
+    public void onPull(ActionEvent actionEvent) {
+
+    }
+
+    public void onFetch(ActionEvent actionEvent) {
+
     }
 }

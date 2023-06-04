@@ -6,20 +6,33 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fxjgit.enter.RegistrationController"
-      stylesheets="@../../styles/github-like-style.css"
-        spacing="10"
-        style="-fx-padding: 25">
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.PasswordField?>
+<BorderPane fx:id="rootNode" prefHeight="720" prefWidth="1080" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/16" fx:controller="com.example.fxjgit.forms.enter.RegistrationController" stylesheets="/com/example/fxjgit/styles/github-like-style.css">
+    <top>
+        <HBox fx:id="menuHbox">
+            <!--            <fx:include source="tools-menu.fxml" fx:id="toolsMenu"/>-->
+        </HBox>
+    </top>
+    <center>
+        <HBox alignment="CENTER">
+            <VBox spacing="10"
+                  style="-fx-padding: 25"
+                  alignment="CENTER">
 
-    <VBox spacing="5">
-        <Label text="Логин"/>
-        <TextField fx:id="usernameField"/>
-    </VBox>
+                <VBox spacing="5">
+                    <Label text="Логин"/>
+                    <TextField fx:id="usernameField"/>
+                </VBox>
 
-    <VBox spacing="5">
-        <Label text="Пароль"/>
-        <TextField fx:id="passwordField"/>
-    </VBox>
+                <VBox spacing="5">
+                    <Label text="Пароль"/>
+                    <PasswordField fx:id="passwordField"/>
+                </VBox>
 
-    <Button text="Зарегистрироваться" onAction="#registerButtonClicked" fx:id="registerButton"/>
-</VBox>
+                <Button text="Зарегистрироваться" onAction="#registerButtonClicked" fx:id="registerButton"/>
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>

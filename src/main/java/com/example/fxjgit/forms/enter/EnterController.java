@@ -1,13 +1,17 @@
-package com.example.fxjgit.enter;
+package com.example.fxjgit.forms.enter;
 
 import com.example.fxjgit.forms.StartWindowController;
+import com.example.fxjgit.forms.ToolsMenuController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -18,7 +22,22 @@ public class EnterController {
     public Button loginButton;
     public Button registerButton;
     public Button enterButton;
+    public HBox menuHbox;
+    public BorderPane rootNode;
+    private ToolsMenuController toolsMenuController;
 
+
+    public void initialize(){
+        try {
+            rootNode.getStylesheets().add(getClass().getResource("/com/example/fxjgit/styles/github-like-style.css").toString());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/fxjgit/forms/tools-menu.fxml"));
+            Node toolsMenu = loader.load();
+            menuHbox.getChildren().add(toolsMenu);
+            toolsMenuController = loader.getController();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     @FXML
     public void loginButtonClicked(ActionEvent event) throws IOException {
         // Обработчик нажатия кнопки "Залогиниться"

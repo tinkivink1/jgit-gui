@@ -390,7 +390,11 @@ public class ProjectWindowController implements Initializable {
     }
 
     public void commitButtonClicked(ActionEvent actionEvent) throws Exception {
-        if(!commitMessageTextField.getText().isEmpty()){
+        if(!commitMessageTextField.getText().isEmpty()
+                && diffListView
+                            .getItems()
+                            .stream()
+                            .anyMatch(x -> x.isSelected())){
             addSelectedFilesToCommit();
             JgitApi.commit(git, commitMessageTextField.getText());
         }
@@ -403,5 +407,15 @@ public class ProjectWindowController implements Initializable {
                 JgitApi.addFile(git, filePath);
             }
         }
+    }
+
+
+    boolean oddClick = true;
+    public void allClicked(ActionEvent actionEvent) {
+        for (CheckBox checkBox:
+             diffListView.getItems()) {
+            checkBox.setSelected(oddClick);
+        }
+        oddClick=!oddClick;
     }
 }

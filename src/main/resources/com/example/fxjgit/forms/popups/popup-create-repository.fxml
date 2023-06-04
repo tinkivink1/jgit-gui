@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER_LEFT" spacing="10" styleClass="popup-container" fx:controller="com.example.fxjgit.popups.CreateRepositoryController" stylesheets="@../../styles/popup-create-style.css">
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER_LEFT" spacing="10" styleClass="popup-container" fx:controller="com.example.fxjgit.forms.popups.CreateRepositoryController" stylesheets="@../../styles/popup-create-style.css">
     <Label text="Create a new repository" styleClass="popup-title" />
     <VBox spacing="6">
         <Label text="Name" styleClass="popup-label" />
