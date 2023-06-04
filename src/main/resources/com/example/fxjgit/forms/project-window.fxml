@@ -23,9 +23,13 @@
         <SplitPane dividerPositions="0.3">
             <TabPane>
                 <Tab text="Changes">
-                    <ScrollPane fitToHeight="true" fitToWidth="true">
+                    <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background: #ffffff">
                         <VBox>
-                            <Button fx:id="selectAll" text="All" onAction="#allClicked" />
+                            <HBox spacing="10">
+                                <Button fx:id="selectAll" text="All" onAction="#allClicked" />
+                                <Button fx:id="updateButton" text="🗘 Update" onAction="#updateScreen" />
+                            </HBox>
+
                             <ListView VBox.vgrow="ALWAYS" fx:id="diffListView">
                             </ListView>
                             <VBox spacing="10" alignment="CENTER">
