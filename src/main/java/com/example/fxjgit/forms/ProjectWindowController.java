@@ -398,6 +398,8 @@ public class ProjectWindowController implements Initializable {
             addSelectedFilesToCommit();
             JgitApi.commit(git, commitMessageTextField.getText());
         }
+
+        updateScreen();
     }
 
     public void addSelectedFilesToCommit() throws Exception {
