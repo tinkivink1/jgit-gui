@@ -34,8 +34,9 @@ public class UserDAO implements ModelDAO<User> {
                 int userId = resultSet.getInt("UserId");
                 String username = resultSet.getString("Username");
                 String password = resultSet.getString("Password");
+                String secret = resultSet.getString("Secret");
                 RepositoryDAO repositoryDAO = DAOFactory.getRepositoryDAO();
-                User user = new User(userId, username, password, repositoryDAO.getRepositoriesByUserId(userId));
+                User user = new User(userId, username, password, repositoryDAO.getRepositoriesByUserId(userId), secret);
                 users.add(user);
             }
         } catch (SQLException e) {
@@ -60,7 +61,9 @@ public class UserDAO implements ModelDAO<User> {
             if (resultSet.next()) {
                 String username = resultSet.getString("Username");
                 String password = resultSet.getString("Password");
-                user = new User(id, username, password, null);
+                String secret = resultSet.getString("secret");
+
+                user = new User(id, username, password, null, secret);
                 // Заполняем репозитории пользователя
                 RepositoryDAO repositoryDAO = DAOFactory.getRepositoryDAO();
                 List<Repository> repositories = repositoryDAO.getRepositoriesByUserId(id);
@@ -86,9 +89,11 @@ public class UserDAO implements ModelDAO<User> {
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 int id = resultSet.getInt("userid");
-                String username = resultSet.getString("username");
-                String password = resultSet.getString("password");
-                user = new User(id, username, password, null);
+                String username = resultSet.getString("Username");
+                String password = resultSet.getString("Password");
+                String secret = resultSet.getString("secret");
+
+                user = new User(id, username, password, null, secret);
                 // Заполняем репозитории пользователя
                 RepositoryDAO repositoryDAO = DAOFactory.getRepositoryDAO();
                 List<Repository> repositories = repositoryDAO.getRepositoriesByUserId(id);
@@ -112,9 +117,10 @@ public class UserDAO implements ModelDAO<User> {
     public boolean add(User user) {
         if (getByUsername(user.getUsername()) == null) {
             try {
-                PreparedStatement statement = connection.prepareStatement("INSERT INTO Users (Username, Password) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement statement = connection.prepareStatement("INSERT INTO Users (Username, Password, Secret) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
                 statement.setString(1, user.getUsername());
                 statement.setString(2, user.getPassword());
+                statement.setString(3, user.getSecret());
                 statement.executeUpdate();
 
                 ResultSet generatedKeys = statement.getGeneratedKeys();

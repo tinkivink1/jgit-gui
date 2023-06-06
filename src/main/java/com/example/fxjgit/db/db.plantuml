@@ -1,0 +1,17 @@
+@startuml
+
+title __Диаграмма классов интерфейса БД__\n
+
+
+
+  com.example.fxjgit.db.RepositoryDAO .up.|> com.example.fxjgit.db.ModelDAO
+  com.example.fxjgit.db.Repository o-- com.example.fxjgit.db.RepositoryDAO
+  com.example.fxjgit.db.UserDAO .up.|> com.example.fxjgit.db.ModelDAO
+  com.example.fxjgit.db.User o-- com.example.fxjgit.db.UserDAO
+  com.example.fxjgit.db.UserDAO o-- com.example.fxjgit.db.DAOFactory
+  com.example.fxjgit.db.RepositoryDAO o-- com.example.fxjgit.db.DAOFactory
+
+
+
+
+@enduml

@@ -10,29 +10,43 @@
                 <MenuItem text="New Repository" fx:id="newRepoButton" onAction="#newRepoClicked"/>
                 <MenuItem text="Clone Repository" fx:id="cloneRepoButton" onAction="#cloneClicked"/>
                 <MenuItem text="Open Repository" fx:id="openRepoButton" onAction="#openClicked"/>
-                <MenuItem text="Exit" fx:id="exitButton"/>
             </Menu>
             <Menu text="Branch">
                 <MenuItem text="New branch" fx:id="newBranchButton" onAction="#newBranchClicked"/>
-                <MenuItem text="Rename" fx:id="renameButton" onAction="#branchClicked"/>
+                <MenuItem text="Rename" fx:id="renameButton" onAction="#renameBranchClicked"/>
                 <MenuItem text="Delete" fx:id="deleteButton" onAction="#deleteClicked"/>
-                <MenuItem text="Discard all changes" fx:id="discardButton" onAction="#discardClicked"/>
-                <MenuItem text="Stash all changes" fx:id="stashButton" onAction="#stashClicked"/>
                 <SeparatorMenuItem />
-                <Menu text="Switch to">
-                    <MenuItem text="Branch A" onAction="#switchToBranchA"/>
-                    <MenuItem text="Branch B" onAction="#switchToBranchB"/>
-                    <MenuItem text="Branch C" onAction="#switchToBranchC"/>
+                <Menu text="Switch to" fx:id="branchMenu">
+
                 </Menu>
             </Menu>
+            <Menu text="Remote">
+                <MenuItem text="Add..." fx:id="newRemote" onAction="#newRemoteClicked"/>
+                <SeparatorMenuItem />
+                <Menu text="Switch to" fx:id="remoteMenu">
 
+                </Menu>
+            </Menu>
             <Menu text="Help">
                 <MenuItem text="About" />
             </Menu>
 
-            <Menu text="↑ Push" onAction="#onPush" fx:id="pushButton"/>
-            <Menu text="↓ Pull" onAction="#onPull" fx:id="pullButton"/>
-            <Menu text="🗘 Fetch" onAction="#onFetch" fx:id="fetchButton"/>
+            <Menu text="↑ Push" mnemonicParsing="false" onShowing="#onPush" fx:id="pushButton">
+                <items>
+                    <MenuItem mnemonicParsing="false" text=" " />
+                </items>
+            </Menu>
+            <Menu text="↓ Pull" mnemonicParsing="false" onShowing="#onPull" fx:id="pullButton">
+                <items>
+                    <MenuItem mnemonicParsing="false" text=" " />
+                </items>
+            </Menu>
+            <Menu text="🗘 Fetch" mnemonicParsing="false" onShowing="#onFetch" fx:id="fetchButton">
+                <items>
+                    <MenuItem mnemonicParsing="false" text=" " />
+                </items>
+            </Menu>
+            <Menu text="" fx:id="branchName"/>
         </menus>
     </MenuBar>
 </AnchorPane>

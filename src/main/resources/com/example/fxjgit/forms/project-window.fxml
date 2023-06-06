@@ -34,7 +34,8 @@
                             </ListView>
                             <VBox spacing="10" alignment="CENTER">
                                 <TextField fx:id="commitMessageTextField" promptText="Commit message (required)" />
-                                <Button text="Commit" onAction="#commitButtonClicked" fx:id="commitButton" VBox.vgrow="ALWAYS" prefWidth="Infinity"/>
+                                <Button text="Commit" onAction="#onCommitButtonClicked" fx:id="commitButton" VBox.vgrow="ALWAYS" prefWidth="Infinity"/>
+                                <Button text="Reset" onAction="#onResetButtonClicked" fx:id="resetButton" VBox.vgrow="ALWAYS" prefWidth="Infinity"/>
                             </VBox>
                         </VBox>
                     </ScrollPane>

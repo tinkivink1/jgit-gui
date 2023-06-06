@@ -46,13 +46,17 @@ Button:hover {
 #commitButton, #selectAll{
     -fx-background-color: #0366d6;
     -fx-border-color: #0366d6;
-    -fx-text-fill: black;
+    -fx-text-fill: white;
     -fx-padding: 3px 6px 3px 6px;
 }
 
 #commitButton:hover, #selectAll:hover{
     -fx-background-color: #0699d9;
     -fx-border-color: #0699d9;
+}
+
+#resetButton {
+    -fx-padding: 3px 6px 3px 6px;
 }
 
 #updateButton{

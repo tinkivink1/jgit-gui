@@ -3,6 +3,7 @@ package com.example.fxjgit;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoHeadException;
@@ -11,18 +12,20 @@ import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.diff.Edit;
 import org.eclipse.jgit.diff.RawText;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectReader;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.transport.CredentialsProvider;
-import org.eclipse.jgit.transport.TransportHttp;
-import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.eclipse.jgit.transport.*;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,6 +35,8 @@ import java.util.List;
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
 public class JgitApi {
+
+    private static String secret = "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";
     /**
      Метод initializeRepository() инициализирует новый Git-репозиторий по указанному пути.
      @param path путь к директории, где должен быть создан репозиторий
@@ -84,6 +89,7 @@ public class JgitApi {
             git = Git.cloneRepository()
                     .setURI(url)
                     .setDirectory(new File(path))
+
                     .call();
             System.out.println("Repository cloned successfully!");
         } catch (GitAPIException e) {
@@ -106,7 +112,7 @@ public class JgitApi {
         try {
             TransportConfigCallback transportConfigCallback = transport -> {
                 if (transport instanceof TransportHttp) {
-                    ((TransportHttp) transport).setCredentialsProvider(credentialsProvider);
+                    ((TransportHttp) transport).setCredentialsProvider(new UsernamePasswordCredentialsProvider(secret, ""));
                 }
             };
             git = Git.cloneRepository()
@@ -144,16 +150,94 @@ public class JgitApi {
      @return объект Status, содержащий информацию о статусе файлов в рабочей директории
      @throws GitAPIException если происходит ошибка взаимодействия с Git API при проверке статуса файлов
      */
-    public static Status checkStatus(Git git) {
-        StatusCommand statusCommand = git.status();
-        Status status = null;
-        try {
-            status = statusCommand.call();
-        } catch (GitAPIException e) {
-            System.out.println(e.getStackTrace());
-        }
+    public static List<String> status(Git git) throws GitAPIException {
+        Status status = git.status().call();
+        List<String> affectedFiles = new ArrayList<>();
 
-        return status;
+        // Получение измененных файлов
+        status.getModified().forEach(file -> affectedFiles.add(file));
+
+        // Получение добавленных файлов
+        status.getAdded().forEach(file -> affectedFiles.add(file));
+
+        // Получение удаленных файлов
+        status.getRemoved().forEach(file -> affectedFiles.add(file));
+
+        // Получение измененных невследимых файлов
+        status.getUntracked().forEach(file -> affectedFiles.add(file));
+
+        return affectedFiles;
+    }
+
+    /**
+     * Извлекает изменения из удаленного репозитория и обновляет локальный репозиторий.
+     *
+     * @param git             объект Git, представляющий локальный репозиторий
+     * @param remoteRepoUrl   URL удаленного репозитория
+     * @param username        имя пользователя для аутентификации (если требуется)
+     * @param password        пароль пользователя для аутентификации (если требуется)
+     * @throws GitAPIException если произошла ошибка при выполнении операции извлечения
+     */
+    public static void pull(Git git, String remoteRepoUrl, String username, String password) throws GitAPIException {
+        PullCommand pullCommand = git.pull();
+
+        // Установка URL удаленного репозитория
+        pullCommand.setRemote(remoteRepoUrl);
+
+        // Установка учетных данных (если требуется аутентификация)
+        CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(secret, "");
+        pullCommand.setCredentialsProvider(credentialsProvider);
+
+        // Извлечение изменений из удаленного репозитория в локальный репозиторий
+        pullCommand.call();
+    }
+
+    /**
+     * Получает изменения из удаленного репозитория в локальный репозиторий без автоматического слияния.
+     *
+     * @param git             объект Git, представляющий локальный репозиторий
+     * @param remoteRepoUrl   URL удаленного репозитория
+     * @param username        имя пользователя для аутентификации (если требуется)
+     * @param password        пароль пользователя для аутентификации (если требуется)
+     * @throws GitAPIException если произошла ошибка при выполнении операции получения изменений
+     */
+    public static void fetch(Git git, String remoteRepoUrl, String username, String password) throws GitAPIException {
+        FetchCommand fetchCommand = git.fetch();
+
+        // Установка URL удаленного репозитория
+        fetchCommand.setRemote(remoteRepoUrl);
+
+        // Установка учетных данных (если требуется аутентификация)
+        CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(secret, "");
+        fetchCommand.setCredentialsProvider(credentialsProvider);
+
+        // Получение изменений из удаленного репозитория в локальный репозиторий
+        fetchCommand.call();
+    }
+
+    /**
+     * Отправляет изменения из локального репозитория в удаленный репозиторий.
+     *
+     * @param git             объект Git, представляющий локальный репозиторий
+     * @param remoteRepoUrl   URL удаленного репозитория
+     * @param username        имя пользователя для аутентификации (если требуется)
+     * @param password        пароль пользователя для аутентификации (если требуется)
+     * @throws GitAPIException если произошла ошибка при выполнении операции отправки
+     */
+    public static void push(Git git, String remoteRepoUrl, String username, String password) throws GitAPIException {
+        PushCommand pushCommand = git.push();
+
+        // Установка URL удаленного репозитория
+        pushCommand.setRemote(remoteRepoUrl);
+
+        // Установка учетных данных (если требуется аутентификация)
+        CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(secret, "");
+        pushCommand.setCredentialsProvider(credentialsProvider);
+
+        // Отправка изменений из локального репозитория в удаленный репозиторий
+        pushCommand.call();
+
+        System.out.println("push performed");
     }
 
     /**
@@ -164,23 +248,52 @@ public class JgitApi {
      @return список строк, содержащий пути к файлам, затронутым коммитом
      @throws IOException если происходит ошибка ввода-вывода при получении информации о файлах
      */
-    public static List<String> getAffectedFiles(Repository repository, ObjectId commitId) throws IOException {
+    public static List<String> getAffectedFiles(Repository repository, ObjectId commitId) throws IOException, GitAPIException {
         List<String> affectedFiles = new ArrayList<>();
 
         try (RevWalk revWalk = new RevWalk(repository)) {
-            ObjectId commitObjectId = commitId;
-            RevCommit commit = revWalk.parseCommit(commitObjectId);
+            RevCommit commit = revWalk.parseCommit(commitId);
+            RevTree parentTree = commit.getParentCount() > 0 ? revWalk.parseCommit(commit.getParent(0).getId()).getTree() : null;
+            RevTree commitTree = commit.getTree();
 
-            try (TreeWalk treeWalk = new TreeWalk(repository)) {
-                treeWalk.addTree(commit.getTree());
-                treeWalk.setRecursive(true);
+            try (Git git = new Git(repository)) {
+                List<DiffEntry> diffs = git.diff()
+                        .setOldTree(getCanonicalTreeParser(repository, parentTree))
+                        .setNewTree(getCanonicalTreeParser(repository, commitTree))
+                        .call();
 
-                while (treeWalk.next()) {
-                    affectedFiles.add(treeWalk.getPathString());
+                for (DiffEntry diff : diffs) {
+                    String oldPath = diff.getOldPath();
+                    String newPath = diff.getNewPath();
+
+                    switch (diff.getChangeType()) {
+                        case ADD:
+                            affectedFiles.add(newPath);
+                            break;
+                        case MODIFY:
+                            affectedFiles.add(newPath);
+                            break;
+                        case DELETE:
+                            affectedFiles.add(oldPath);
+                            break;
+                        case RENAME:
+                            affectedFiles.add(oldPath);
+                            affectedFiles.add(newPath);
+                            break;
+                    }
                 }
             }
         }
+
         return affectedFiles;
+    }
+
+    private static CanonicalTreeParser getCanonicalTreeParser(Repository repository, RevTree tree) throws IOException {
+        CanonicalTreeParser treeParser = new CanonicalTreeParser();
+        try (ObjectReader reader = repository.newObjectReader()) {
+            treeParser.reset(reader, tree.getId());
+        }
+        return treeParser;
     }
 
     /**
@@ -191,7 +304,7 @@ public class JgitApi {
      @return список строк, содержащий различия для указанного файла
      @throws IOException если происходит ошибка ввода-вывода при получении различий
      */
-    public static List<String> getCurrentDiffs(Git git, String filename) throws IOException {
+    public static List<String> getCurrentDiffs(Git git, String filename) throws IOException, InvalidFormatException {
         Repository repository = git.getRepository();
         // Get the latest commit
         RevCommit commit = getLatestCommit(repository);
@@ -201,13 +314,21 @@ public class JgitApi {
 
         // Get the current file content
         Path currentPath = Paths.get(git.getRepository().getDirectory() + "\\..\\", filename);
-        String currentContent = new String(Files.readAllBytes(currentPath));
+        List<String> filecontent = FileReader.read(new File(currentPath.toString()));
+        StringBuilder result = new StringBuilder();
 
+        for (String str : filecontent) {
+            result.append(str);
+            result.append('\n');
+        }
+
+        String currentContent =  result.toString();
         // Compare the contents and generate the diff
         List<String> diffList = generateDiff(lastCommitContent, currentContent);
 
         return diffList;
     }
+
 
     /**
      Метод getFileContentFromCommit() возвращает содержимое указанного файла из указанного коммита в заданном репозитории.
@@ -312,6 +433,7 @@ public class JgitApi {
         return diffList;
     }
 
+
     /**
 
      Метод commit() создает коммит с указанным сообщением в заданном Git-репозитории.
@@ -323,5 +445,141 @@ public class JgitApi {
         CommitCommand commitCommand = git.commit();
         commitCommand.setMessage(commitMessage);
         commitCommand.call();
+    }
+
+    public static void createBranch(Git git, String branchName) {
+        try {
+            Repository repository = git.getRepository();
+
+            // Проверяем, что указанная ветка не существует
+            Ref existingBranch = repository.findRef(branchName);
+            if (existingBranch != null) {
+                System.out.println("Ветка с именем " + branchName + " уже существует.");
+                return;
+            }
+
+            // Создаем новую ветку
+            git.branchCreate()
+                    .setName(branchName)
+                    .call();
+
+            System.out.println("Ветка " + branchName + " успешно создана.");
+        } catch (GitAPIException | IOException e) {
+            System.out.println("Ошибка при создании ветки: " + e.getMessage());
+        }
+    }
+
+    public static void switchToBranch(Git git, String branchName) {
+        try {
+            Repository repository = git.getRepository();
+
+            // Проверяем, существует ли указанная ветка
+            Ref branchRef = repository.findRef(branchName);
+            if (branchRef == null) {
+                System.out.println("Ветка с именем " + branchName + " не существует.");
+                return;
+            }
+
+            // Переключаемся на указанную ветку
+            CheckoutCommand checkoutCommand = git.checkout();
+            checkoutCommand.setName(branchName);
+            checkoutCommand.call();
+
+            System.out.println("Успешно переключено на ветку " + branchName);
+        } catch (GitAPIException e) {
+            System.out.println("Ошибка при переключении на ветку: " + e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static List<String> getBranchList(Git git) {
+        List<String> branchList = new ArrayList<>();
+
+        try {
+            List<Ref> branches = git.branchList()
+                    .setListMode(ListBranchCommand.ListMode.ALL)
+                    .call();
+
+            for (Ref branch : branches) {
+                String branchName = branch.getName();
+                branchList.add(branchName);
+            }
+        } catch (Exception e) {
+            System.out.println("Error getting branch list: " + e.getMessage());
+        }
+
+        return branchList;
+    }
+
+    public static void deleteBranch(Git git, String branchName) {
+        try {
+            git.branchDelete()
+                    .setBranchNames(branchName)
+                    .call();
+
+            System.out.println("Branch '" + branchName + "' deleted successfully.");
+        } catch (GitAPIException e) {
+            System.out.println("Error deleting branch: " + e.getMessage());
+        }
+    }
+
+    public static void renameBranch(Git git, String oldBranchName, String newBranchName) {
+        try {
+            git.branchRename()
+                    .setOldName(oldBranchName)
+                    .setNewName(newBranchName)
+                    .call();
+
+            System.out.println("Branch '" + oldBranchName + "' renamed to '" + newBranchName + "' successfully.");
+        } catch (GitAPIException e) {
+            System.out.println("Error renaming branch: " + e.getMessage());
+        }
+    }
+
+    public static String getRemoteRepositoryUrl(Git git, String remoteName) {
+        try {
+            Repository repository = git.getRepository();
+            List<RemoteConfig> remoteConfigs = RemoteConfig.getAllRemoteConfigs(repository.getConfig());
+
+            for (RemoteConfig remoteConfig : remoteConfigs) {
+                if (remoteConfig.getName().equals(remoteName)) {
+                    URIish uri = remoteConfig.getURIs().get(0);
+                    return uri.toString();
+                }
+            }
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static void addRemote(Git git, String remoteName, String remoteUrl) {
+        try {
+            git.remoteAdd()
+                    .setName(remoteName)
+                    .setUri( new URIish(remoteUrl))
+                    .call();
+
+            System.out.println("Remote '" + remoteName + "' added successfully.");
+        } catch (GitAPIException e) {
+            System.out.println("Error adding remote: " + e.getMessage());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void reset(Git git) {
+        try {
+            git.reset()
+                    .setMode(ResetCommand.ResetType.SOFT)
+                    .setRef("HEAD^")
+                    .call();
+
+            System.out.println("Last commit reset successfully (soft reset).");
+        } catch (GitAPIException e) {
+            System.out.println("Error resetting last commit: " + e.getMessage());
+        }
     }
 }

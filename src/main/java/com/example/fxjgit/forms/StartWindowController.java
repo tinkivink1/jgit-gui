@@ -6,10 +6,7 @@ import com.example.fxjgit.db.RepositoryDAO;
 import com.example.fxjgit.db.UserDAO;
 import com.example.fxjgit.db.entities.Repository;
 import com.example.fxjgit.db.entities.User;
-import com.example.fxjgit.forms.popups.CloneRepositoryController;
-import com.example.fxjgit.forms.popups.CreateRepositoryController;
-import com.example.fxjgit.forms.popups.ExistingRepositoryController;
-import com.example.fxjgit.forms.popups.IPopup;
+import com.example.fxjgit.forms.popups.*;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -71,7 +68,7 @@ public class StartWindowController {
                 Object selectedItem = repositoriesList.getSelectionModel().getSelectedItem();
                 if (selectedItem != null) {
                     try {
-                        nextScene(JgitApi.openRepository((String) selectedItem));
+                        Popup.nextScene(JgitApi.openRepository((String) selectedItem), user);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -101,161 +98,26 @@ public class StartWindowController {
     }
 
     public void onCreateButtonClicked(MouseEvent event) throws IOException {
-        AtomicReference<Git> resultGit = new AtomicReference<>(null);
-        showPopupScene(CreateRepositoryController.class,
-                "/com/example/fxjgit/forms/popups/popup-create-repository.fxml",
-                "#createButton",
-                git ->  resultGit.set(git) );
-        System.out.println(resultGit.get());
-        if (resultGit.get() != null){
-            nextScene(resultGit.get());
-        }
-
-        UserDAO userDAO = DAOFactory.getUserDAO();
-        user.getRepositories().add(new Repository(user.getUserId(), resultGit
-                                                                        .get()
-                                                                        .getRepository()
-                                                                        .getDirectory()
-                                                                        .getAbsolutePath()));
-        userDAO.update(user);
+        Popup.showCreatePopup(user);
     }
 
     public void onCloneButtonClicked(MouseEvent event) throws IOException, GitAPIException {
-        AtomicReference<Git> resultGit = new AtomicReference<>(null);
-        showPopupScene(CloneRepositoryController.class,
-                "/com/example/fxjgit/forms/popups/popup-clone-repository.fxml",
-                "#cloneButton",
-                git -> resultGit.set(git));
-        System.out.println(resultGit.get());
-        if (resultGit.get() != null){
-            nextScene(resultGit.get());
-
-            UserDAO userDAO = DAOFactory.getUserDAO();
-            Iterable<RemoteConfig> remoteConfigs = resultGit.get().remoteList().call();
-            // Перебрать все удаленные репозитории и получить ссылку на нужный
-            String remoteName = "origin";
-            String remoteUrl = "";
-            for (RemoteConfig remoteConfig : remoteConfigs)
-                if (remoteConfig.getName().equals(remoteName)) {
-                    URIish remoteUri = remoteConfig.getURIs().get(0);
-                    remoteUrl = remoteUri.toString();
-                    break;
-                }
-
-            user.getRepositories().add(new Repository(user.getUserId(), remoteUrl,resultGit
-                                                                                    .get()
-                                                                                    .getRepository()
-                                                                                    .getDirectory()
-                                                                                    .getAbsolutePath()));
-            userDAO.update(user);
-        }
+        Popup.showClonePopup(user);
     }
 
     public void onExistingButtonClicked(MouseEvent event) throws IOException, GitAPIException {
-        AtomicReference<Git> resultGit = new AtomicReference<>(null);
-        showPopupScene(ExistingRepositoryController.class,
-                "/com/example/fxjgit/forms/popups/popup-existing-repository.fxml",
-                "#openButton",
-                git -> resultGit.set(git));
-        System.out.println(resultGit.get());
-        if (resultGit.get() != null){
-            nextScene(resultGit.get());
-
-            UserDAO userDAO = DAOFactory.getUserDAO();
-            Iterable<RemoteConfig> remoteConfigs = resultGit.get().remoteList().call();
-            // Перебрать все удаленные репозитории и получить ссылку на нужный
-            String remoteName = "origin";
-            String remoteUrl = "";
-            for (RemoteConfig remoteConfig : remoteConfigs)
-                if (remoteConfig.getName().equals(remoteName)) {
-                    URIish remoteUri = remoteConfig.getURIs().get(0);
-                    remoteUrl = remoteUri.toString();
-                    break;
-                }
-
-            user.getRepositories().add(new Repository(user.getUserId(), remoteUrl,resultGit
-                    .get()
-                    .getRepository()
-                    .getDirectory()
-                    .getAbsolutePath()));
-            userDAO.update(user);
-        }
+        Popup.showExistingPopup(user);
     }
 
-    private  void nextScene(Git git) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(ProjectWindowController.class.getResource("/com/example/fxjgit/forms/project-window.fxml"));
 
-        Scene scene = new Scene(fxmlLoader.load(), 1080, 720);
-        ProjectWindowController helloController = fxmlLoader.getController();
-        helloController.setGit(git);
-        helloController.setUser(user);
-        try {
-            helloController.updateScreen();
-        } catch (GitAPIException e) {
-            e.printStackTrace();
-        }
-//        parentStage.setTitle("Jgit FX");
-//        parentStage.setScene(scene);
-//        parentStage.show();
-        Stage stage = (Stage) createButton.getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
-
-//        ((Stage)createButton.getScene().getWindow()).close();
-    }
-
-    private <T> void showPopupScene(Class<T> controllerType, String pathToScene, String actionButtonName, Consumer<Git> resultHandler){
-        // Загружаем разметку из FXML-файла
-        Parent root = null;
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(pathToScene));
-            root = fxmlLoader.load();
-            T controller = fxmlLoader.getController();
-
-            // Создаем новую сцену
-            Scene scene = new Scene(root);
-
-            // Создаем новое окно
-            Stage popupStage = new Stage();
-            popupStage.initModality(Modality.APPLICATION_MODAL); // Блокирует взаимодействие с основным окном
-            popupStage.setScene(scene);
-
-            Button initializeButton = (Button) root.lookup(actionButtonName); // Замените "initializeButton" на соответствующий ID кнопки в FXML
-            initializeButton.addEventHandler(ActionEvent.ACTION, e -> {
-                Git result = null;
-                if (controllerType.isInstance(controller)) {
-                    T typedController = controllerType.cast(controller);
-                    if (IPopup.class.isAssignableFrom(IPopup.class)) {
-                        IPopup repositoryController = (IPopup) typedController;
-                        repositoryController.setUser(user);
-                        result = repositoryController.finalAction();
-                    }
-                }
-                resultHandler.accept(result); // Передаем результат обратно в вызывающий код
-                popupStage.close();
-//                parentStage.hide();
-            });
-
-            popupStage.setOnCloseRequest (e -> {
-                if (IPopup.class.isAssignableFrom(IPopup.class)) {
-                    IPopup repositoryController = (IPopup) controller;
-                    Git result = repositoryController.finalAction();
-                    resultHandler.accept(result); // Передаем результат обратно в вызывающий код
-                    System.out.println(result);
-                }
-            });
-
-            // Отображаем окно по центру
-            popupStage.centerOnScreen();
-
-            // Показываем окно и ждем, пока оно не будет закрыто
-            popupStage.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void reloadRepositories(MouseEvent mouseEvent) {
         setRepositoriesInInterface();
+    }
+
+    public void onReturnClicked(MouseEvent mouseEvent) {
+        parentStage.show();
+        Stage stage = (Stage) cloneButton.getScene().getWindow();
+        stage.close();
     }
 }

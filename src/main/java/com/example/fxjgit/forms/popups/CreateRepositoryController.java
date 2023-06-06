@@ -78,8 +78,9 @@ public class CreateRepositoryController implements Initializable, IPopup {
 
 
     public Git createNewRepository() {
+        if(selectedLocationTextField.getText().isEmpty())
+            return null;
         this.git = JgitApi.initializeRepository(selectedLocationTextField.getText());
-
         return this.git;
     }
 

@@ -7,23 +7,27 @@ public class User {
     private String username;
     private String password;
     private List<Repository> repositories;
+    private String secret;
 
-    public User(int userId, String username, String password, List<Repository> repositories) {
+    public User(int userId, String username, String password, List<Repository> repositories, String secret) {
         this.userId = userId;
         this.username = username;
         this.password = password;
         this.repositories = repositories;
+        this.secret = secret;
     }
 
-    public User(String username, String password, List<Repository> repositories) {
+    public User(String username, String password, List<Repository> repositories, String secret) {
         this.username = username;
         this.password = password;
         this.repositories = repositories;
+        this.secret = secret;
     }
 
-    public User(String username, String password) {
+    public User(String username, String password, String secret) {
         this.username = username;
         this.password = password;
+        this.secret = secret;
     }
 
     // Геттеры и сеттеры
@@ -59,6 +63,14 @@ public class User {
         this.repositories = repositories;
     }
 
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -66,7 +78,7 @@ public class User {
 
         User that = (User) o;
 
-        if (username.equals(that.username)) return false;
+        if (!username.equals(that.username)) return false;
         return password.equals(that.password);
     }
 }

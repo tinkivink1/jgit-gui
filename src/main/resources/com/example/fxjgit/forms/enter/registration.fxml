@@ -31,6 +31,10 @@
                     <PasswordField fx:id="passwordField"/>
                 </VBox>
 
+                <VBox spacing="5">
+                    <Label text="Secret token"/>
+                    <PasswordField fx:id="secretToken"/>
+                </VBox>
                 <Button text="Sign up" onAction="#registerButtonClicked" fx:id="registerButton"/>
             </VBox>
         </HBox>

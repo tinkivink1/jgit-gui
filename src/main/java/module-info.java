@@ -4,6 +4,8 @@ module com.example.fxjgit {
     requires org.eclipse.jgit;
     requires java.sql;
     requires org.apache.poi.ooxml;
+    requires org.apache.poi.poi;
+    requires java.desktop;
 
 
     opens com.example.fxjgit to javafx.fxml;

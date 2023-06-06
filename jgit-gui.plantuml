@@ -1,0 +1,239 @@
+@startuml
+
+title __JGIT-GUI's Class Diagram__\n
+
+  namespace  {
+    namespace om.example.fxjgit {
+      class com.example.fxjgit.JgitApi {
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace om.example.fxjgit {
+      class com.example.fxjgit.MainApplication {
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace om.example.fxjgit {
+      namespace db {
+        class com.example.fxjgit.db.ConnectionDB {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace om.example.fxjgit {
+      namespace db {
+        class com.example.fxjgit.db.DAOFactory {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace om.example.fxjgit {
+      namespace db {
+        interface com.example.fxjgit.db.ModelDAO {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace om.example.fxjgit {
+      namespace db {
+        class com.example.fxjgit.db.RepositoryDAO {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace om.example.fxjgit {
+      namespace db {
+        class com.example.fxjgit.db.UserDAO {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace om.example.fxjgit {
+      namespace db {
+        namespace entities {
+          class com.example.fxjgit.db.entities.Repository {
+          }
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace om.example.fxjgit {
+      namespace db {
+        namespace entities {
+          class com.example.fxjgit.db.entities.User {
+          }
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace om.example.fxjgit {
+      namespace forms {
+        class com.example.fxjgit.forms.ProjectWindowController {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace om.example.fxjgit {
+      namespace forms {
+        class com.example.fxjgit.forms.StartWindowController {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace om.example.fxjgit {
+      namespace forms {
+        class com.example.fxjgit.forms.ToolsMenuController {
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace om.example.fxjgit {
+      namespace forms {
+        namespace enter {
+          class com.example.fxjgit.forms.enter.EnterController {
+          }
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace om.example.fxjgit {
+      namespace forms {
+        namespace enter {
+          class com.example.fxjgit.forms.enter.LoginController {
+          }
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace om.example.fxjgit {
+      namespace forms {
+        namespace enter {
+          class com.example.fxjgit.forms.enter.RegistrationController {
+          }
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace om.example.fxjgit {
+      namespace forms {
+        namespace popups {
+          class com.example.fxjgit.forms.popups.CloneRepositoryController {
+          }
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace om.example.fxjgit {
+      namespace forms {
+        namespace popups {
+          class com.example.fxjgit.forms.popups.CreateRepositoryController {
+          }
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace om.example.fxjgit {
+      namespace forms {
+        namespace popups {
+          class com.example.fxjgit.forms.popups.ExistingRepositoryController {
+          }
+        }
+      }
+    }
+  }
+  
+
+  namespace  {
+    namespace om.example.fxjgit {
+      namespace forms {
+        namespace popups {
+          interface com.example.fxjgit.forms.popups.IPopup {
+          }
+        }
+      }
+    }
+  }
+  
+
+  com.example.fxjgit.MainApplication -up-|> javafx.application.Application
+  com.example.fxjgit.db.RepositoryDAO .up.|> com.example.fxjgit.db.ModelDAO
+  com.example.fxjgit.db.UserDAO .up.|> com.example.fxjgit.db.ModelDAO
+  com.example.fxjgit.forms.ProjectWindowController .up.|> javafx.fxml.Initializable
+  com.example.fxjgit.forms.ProjectWindowController o-- com.example.fxjgit.db.entities.User : user
+  com.example.fxjgit.forms.ProjectWindowController o-- com.example.fxjgit.forms.ToolsMenuController : toolsMenuController
+  com.example.fxjgit.forms.StartWindowController o-- com.example.fxjgit.db.entities.User : user
+  com.example.fxjgit.forms.StartWindowController o-- com.example.fxjgit.forms.ToolsMenuController : toolsMenuController
+  com.example.fxjgit.forms.ToolsMenuController .up.|> javafx.fxml.Initializable
+  com.example.fxjgit.forms.enter.EnterController o-- com.example.fxjgit.forms.ToolsMenuController : toolsMenuController
+  com.example.fxjgit.forms.enter.LoginController o-- com.example.fxjgit.forms.ToolsMenuController : toolsMenuController
+  com.example.fxjgit.forms.enter.RegistrationController o-- com.example.fxjgit.forms.ToolsMenuController : toolsMenuController
+  com.example.fxjgit.forms.popups.CloneRepositoryController .up.|> com.example.fxjgit.forms.popups.IPopup
+  com.example.fxjgit.forms.popups.CloneRepositoryController .up.|> javafx.fxml.Initializable
+  com.example.fxjgit.forms.popups.CloneRepositoryController o-- com.example.fxjgit.db.entities.User : user
+  com.example.fxjgit.forms.popups.CreateRepositoryController .up.|> com.example.fxjgit.forms.popups.IPopup
+  com.example.fxjgit.forms.popups.CreateRepositoryController .up.|> javafx.fxml.Initializable
+  com.example.fxjgit.forms.popups.CreateRepositoryController o-- com.example.fxjgit.db.entities.User : user
+  com.example.fxjgit.forms.popups.ExistingRepositoryController .up.|> com.example.fxjgit.forms.popups.IPopup
+  com.example.fxjgit.forms.popups.ExistingRepositoryController .up.|> javafx.fxml.Initializable
+  com.example.fxjgit.forms.popups.ExistingRepositoryController o-- com.example.fxjgit.db.entities.User : user
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

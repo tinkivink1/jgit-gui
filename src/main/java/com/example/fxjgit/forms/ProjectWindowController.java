@@ -13,18 +13,12 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.Status;
-import org.eclipse.jgit.api.StatusCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoHeadException;
-import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.diff.DiffFormatter;
-import org.eclipse.jgit.diff.Edit;
-import org.eclipse.jgit.diff.RawText;
 import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 
 import java.io.IOException;
 import java.net.URL;
@@ -88,6 +82,7 @@ public class ProjectWindowController implements Initializable {
             Node toolsMenu = loader.load();
             menuHbox.getChildren().add(toolsMenu);
             toolsMenuController = loader.getController();
+
         } catch (IOException | GitAPIException e) {
             e.printStackTrace();
         }
@@ -109,16 +104,7 @@ public class ProjectWindowController implements Initializable {
                 .addListener((observable, oldValue, newValue) -> onCommitChangesClicked((String) newValue));
 
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("tools-menu.fxml"));
-        try {
-            loader.load();
-            ToolsMenuController toolsMenuController = loader.getController();
 
-            // Выполните необходимые действия с контроллером включаемого ресурса
-            // ...
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 
@@ -128,6 +114,7 @@ public class ProjectWindowController implements Initializable {
 
     public void setUser(User user) {
         this.user = user;
+        toolsMenuController.setUser(user);
     }
 
     public void updateScreen() throws GitAPIException, IOException {
@@ -177,14 +164,12 @@ public class ProjectWindowController implements Initializable {
         });
     }
 
-    private void loadDiffList() {
+    private void loadDiffList(){
         diffListView.getItems().clear();
 
-        StatusCommand statusCommand = git.status();
-        Status status = null;
         try {
-            status = statusCommand.call();
-            for (String changedFile : status.getModified()) {
+            List<String> status = JgitApi.status(git);
+            for (String changedFile : status) {
                 CheckBox checkBox = new CheckBox();
                 checkBox.setSelected(true);
                 checkBox.setText(changedFile);
@@ -235,6 +220,8 @@ public class ProjectWindowController implements Initializable {
 
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (InvalidFormatException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -256,6 +243,8 @@ public class ProjectWindowController implements Initializable {
             fillCommitChangesList(commitChanges);
         } catch (IOException ex) {
             ex.printStackTrace();
+        } catch (GitAPIException e) {
+            e.printStackTrace();
         }
 
         // Отображение списка измененных файлов в commitChangesListView
@@ -286,20 +275,6 @@ public class ProjectWindowController implements Initializable {
         }
     }
 
-    @FXML
-    private void onCommitButtonClicked(ActionEvent event) {
-        try {
-            // Выполняем коммит
-            git.commit().setMessage("Commit message").call();
-
-            // Обновляем списки изменений и истории коммитов
-            updateScreen();
-        } catch (GitAPIException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     @FXML
     private void onPullButtonClicked(ActionEvent event) {
@@ -330,7 +305,7 @@ public class ProjectWindowController implements Initializable {
         // Обработка события нажатия на кнопку Settings
     }
 
-    public void commitButtonClicked(ActionEvent actionEvent) throws Exception {
+    public void onCommitButtonClicked(ActionEvent actionEvent) throws Exception {
         if(!commitMessageTextField.getText().isEmpty()
                 && diffListView
                             .getItems()
@@ -360,5 +335,9 @@ public class ProjectWindowController implements Initializable {
             checkBox.setSelected(oddClick);
         }
         oddClick=!oddClick;
+    }
+
+    public void onResetButtonClicked(ActionEvent actionEvent) {
+        JgitApi.reset(git);
     }
 }

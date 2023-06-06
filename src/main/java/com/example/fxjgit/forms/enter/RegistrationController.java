@@ -20,6 +20,7 @@ import java.io.IOException;
 public class RegistrationController {
     public Button registerButton;
     public BorderPane rootNode;
+    public PasswordField secretToken;
     Stage parentStage;
     public void setParentStage(Stage stage){
         parentStage=stage;
@@ -50,11 +51,11 @@ public class RegistrationController {
     public void registerButtonClicked(ActionEvent event) {
         String username = usernameField.getText();
         String password = passwordField.getText();
-
+        String secret = secretToken.getText();
         UserDAO userDAO = DAOFactory.getUserDAO();
         // Создание нового пользователя
         if(!username.isEmpty() && !password.isEmpty()){
-            if(userDAO.add(new User(username, password)))
+            if(userDAO.add(new User(username, password, secret)))
                 System.out.println("Пользователь зарегистрирован");
             showEnterButton();
         }

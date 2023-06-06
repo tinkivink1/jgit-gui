@@ -19,7 +19,7 @@
                     <Button fx:id="cloneButton" onMouseClicked="#onCloneButtonClicked" maxWidth="Infinity" text="Clone repository" HBox.hgrow="ALWAYS" />
                     <Button fx:id="addExistingButton" onMouseClicked="#onExistingButtonClicked" maxWidth="Infinity" text="Add existing repository" HBox.hgrow="ALWAYS" />
                     <Region VBox.vgrow="ALWAYS" />
-<!--                    <Button maxWidth="Infinity" text="Update" HBox.hgrow="ALWAYS" />-->
+                    <Button maxWidth="Infinity" text="Return" onMouseClicked="#onReturnClicked" HBox.hgrow="ALWAYS" />
                 </VBox>
                 <VBox  HBox.hgrow="ALWAYS" alignment="TOP_LEFT" spacing="15">
                     <HBox alignment="CENTER_LEFT" spacing="10">
