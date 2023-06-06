@@ -2,10 +2,6 @@
 JGit API gui (javafx)  
 ![Иллюстрация к проекту](https://media.giphy.com/media/g7GKcSzwQfugw/giphy.gif)  
 
-![image](https://github.com/tinkivink1/jgit-gui/assets/92641773/f97ad6c7-dcad-447d-88da-1363a5369921)
-![image](https://github.com/tinkivink1/jgit-gui/assets/92641773/e6bdbc3e-0f59-472b-83eb-481861af6720)
-![image](https://github.com/tinkivink1/jgit-gui/assets/92641773/54825d8d-e583-4efe-a14c-3612220687c0)
-![image](https://github.com/tinkivink1/jgit-gui/assets/92641773/48fdd7ce-f05e-4e7a-9568-1ef292a4302e)
 
 # Управление учебными документами
 
@@ -30,3 +26,9 @@ JGit API gui (javafx)
 ## Зависимости
 Язык разработки Java.
 Для создания пользовательского интерфейса используется платформа JavaFX, также была использована база данных PostgreSQL.
+
+
+![image](https://github.com/tinkivink1/jgit-gui/assets/92641773/f97ad6c7-dcad-447d-88da-1363a5369921)
+![image](https://github.com/tinkivink1/jgit-gui/assets/92641773/e6bdbc3e-0f59-472b-83eb-481861af6720)
+![image](https://github.com/tinkivink1/jgit-gui/assets/92641773/54825d8d-e583-4efe-a14c-3612220687c0)
+![image](https://github.com/tinkivink1/jgit-gui/assets/92641773/48fdd7ce-f05e-4e7a-9568-1ef292a4302e)
